@@ -1,7 +1,26 @@
-import mongoose from "mongoose";
+import mongoose, { Document, Model } from "mongoose";
 import validator from "validator";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
-const userSchema = new mongoose.Schema(
+// Define the interface for the User document, including custom methods
+export interface IUser extends Document {
+  firstName: string;
+  lastName?: string;
+  userName: string;
+  age?: number;
+  emailId: string;
+  password: string;
+  gender?: "M" | "F" | "O";
+  photoUrl: string;
+  about?: string;
+  skills: string[];
+  getJWT: () => string;
+  validatePassword: (passwordInputByUser: string) => Promise<boolean>;
+}
+
+// Define the User schema
+const userSchema = new mongoose.Schema<IUser>(
   {
     firstName: {
       type: String,
@@ -31,7 +50,7 @@ const userSchema = new mongoose.Schema(
       trim: true,
       validate(value: string) {
         if (!validator.isEmail(value)) {
-          throw new Error("email not valid: " + value);
+          throw new Error("Email not valid: " + value);
         }
       },
     },
@@ -41,7 +60,7 @@ const userSchema = new mongoose.Schema(
       minLength: 8,
       validate(value: string) {
         if (!validator.isStrongPassword(value)) {
-          throw new Error("password not strong enough: " + value);
+          throw new Error("Password not strong enough: " + value);
         }
       },
     },
@@ -55,7 +74,7 @@ const userSchema = new mongoose.Schema(
         "https://w7.pngwing.com/pngs/177/551/png-transparent-user-interface-design-computer-icons-default-stephen-salazar-graphy-user-interface-design-computer-wallpaper-sphere-thumbnail.png",
       validate(value: string) {
         if (!validator.isURL(value)) {
-          throw new Error("not a valid photo url: " + value);
+          throw new Error("Not a valid photo URL: " + value);
         }
       },
     },
@@ -70,4 +89,22 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("User", userSchema);
+// Custom method to generate JWT
+userSchema.methods.getJWT = function () {
+  const user = this as IUser;
+  const token = jwt.sign({ _id: user._id },"Piyush@123", {
+    expiresIn: "1d",
+  });
+  return token;
+};
+
+// Custom method to validate the password
+userSchema.methods.validatePassword = async function (passwordInputByUser: string) {
+  const user = this as IUser;
+  return await bcrypt.compare(passwordInputByUser, user.password);
+};
+
+// Export the User model 
+const User: Model<IUser> = mongoose.model<IUser>("User", userSchema);
+
+export default User;

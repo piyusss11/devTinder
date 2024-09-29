@@ -50,10 +50,10 @@ app.post("/login", async (req:Request, res:Response) => {
     if (!user) {
       throw new Error("Invalid Credentials");
     }
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid =await user.validatePassword(password);
     if (isPasswordValid) {
       // creating a cookie with jwt
-      const token = jwt.sign({ _id: user._id }, "Piyush@123");
+      const token = user.getJWT();
       // sending token in cookie
       res.cookie("token", token);
       res.send("user logged in successfully");
@@ -61,14 +61,15 @@ app.post("/login", async (req:Request, res:Response) => {
       throw new Error("Invalid Credentials");
     }
   } catch (error) {
-    res.status(400).send(`error loggining the user",${error}`);
+    res.status(400).send(`error loggining the user, ${error}`);
   }
 });
 
 app.get("/profile",userAuth, async (req:Request, res:Response) => {
   // console.log(req.cookies)
   try {
-    res.send("/profile");
+    const {user} = req
+    res.send(user);
     // res.send("sending cookies");
   } catch (error) {
     res.status(400).send(`error getting the user",${error}`);
