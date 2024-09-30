@@ -1,15 +1,19 @@
 import express, { Request, Response } from "express";
 import { connectDB } from "./config/database";
 import User from "./models/User";
-import { validateSignUpData } from "./utils/validation";
-import bcrypt from "bcrypt";
 import cookieParser from "cookie-parser";
-import jwt from "jsonwebtoken";
-import { userAuth } from "./middlewares/auth";
+import profileRouter from "./routes/profile";
+import authRouter from "./routes/auth";
+import requestRouter from "./routes/request";
 const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
+
+//routes
+app.use("/", authRouter);
+app.use("/", profileRouter);
+app.use("/", requestRouter);
 
 const port = 3000;
 connectDB()
@@ -21,61 +25,9 @@ connectDB()
   .catch((error) => {
     console.log(error);
   });
-
-app.post("/signup", async (req:Request, res:Response) => {
-  // console.log(req.body);
-
-  try {
-    validateSignUpData(req);
-    const { firstName, userName, lastName, emailId, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({
-      firstName,
-      lastName,
-      userName,
-      emailId,
-      password: hashedPassword,
-    });
-    await user.save();
-    res.send("user created successfully");
-  } catch (error) {
-    res.status(400).send(`error creating the user",${error}`);
-  }
-});
-
-app.post("/login", async (req:Request, res:Response) => {
-  try {
-    const { emailId, password } = req.body;
-    const user = await User.findOne({ emailId });
-    if (!user) {
-      throw new Error("Invalid Credentials");
-    }
-    const isPasswordValid =await user.validatePassword(password);
-    if (isPasswordValid) {
-      // creating a cookie with jwt
-      const token = user.getJWT();
-      // sending token in cookie
-      res.cookie("token", token);
-      res.send("user logged in successfully");
-    } else {
-      throw new Error("Invalid Credentials");
-    }
-  } catch (error) {
-    res.status(400).send(`error loggining the user, ${error}`);
-  }
-});
-
-app.get("/profile",userAuth, async (req:Request, res:Response) => {
-  // console.log(req.cookies)
-  try {
-    const {user} = req
-    res.send(user);
-    // res.send("sending cookies");
-  } catch (error) {
-    res.status(400).send(`error getting the user",${error}`);
-  }
-});
-app.get("/user", async (req:Request, res:Response) => {
+  
+  // extra routes 
+app.get("/user", async (req: Request, res: Response) => {
   const { emailId } = req.body;
   try {
     const users = await User.find({ emailId: emailId });
@@ -89,7 +41,7 @@ app.get("/user", async (req:Request, res:Response) => {
   }
 });
 
-app.patch("/user/:userId", async (req:Request, res:Response) => {
+app.patch("/user/:userId", async (req: Request, res: Response) => {
   const data = req.body;
   const id = req.params?.userId;
   try {
@@ -124,7 +76,7 @@ app.patch("/user/:userId", async (req:Request, res:Response) => {
     res.status(400).send(`error updating the user",${error}`);
   }
 });
-app.delete("/user", async (req:Request, res:Response) => {
+app.delete("/user", async (req: Request, res: Response) => {
   const id = req.body.id;
   try {
     const user = await User.findByIdAndDelete(id);
@@ -133,7 +85,7 @@ app.delete("/user", async (req:Request, res:Response) => {
     res.status(400).send(`error deleting the user",${error}`);
   }
 });
-app.get("/feed", async (req:Request, res) => {
+app.get("/feed", async (req: Request, res) => {
   try {
     const users = await User.find();
     if (users.length === 0) {
