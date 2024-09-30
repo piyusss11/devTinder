@@ -48,7 +48,7 @@ authRouter.post("/login", async (req: Request, res: Response) => {
 });
 
 authRouter.post("/logout", (req: Request, res: Response) => {
-  res.clearCookie("token");
+  res.clearCookie("token"); // redirect to login or register page
   res.send("user logged out successfully");
 })
 

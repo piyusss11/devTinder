@@ -41,41 +41,6 @@ app.get("/user", async (req: Request, res: Response) => {
   }
 });
 
-app.patch("/user/:userId", async (req: Request, res: Response) => {
-  const data = req.body;
-  const id = req.params?.userId;
-  try {
-    const ALLOWED_UPDATES = [
-      "firstName",
-      "lastName",
-      "userName",
-      "age",
-      "password",
-      "gender",
-      "photoUrl",
-      "about",
-      "skills",
-    ];
-    const isUpdateAllowed = Object.keys(data).every((key) =>
-      ALLOWED_UPDATES.includes(key)
-    );
-
-    if (!isUpdateAllowed) {
-      throw new Error("update not allowed");
-    }
-    if (data?.skills?.length > 10) {
-      throw new Error("Can have only 10 skills");
-    }
-    const user = await User.findByIdAndUpdate(id, data, {
-      returnDocument: "before",
-      runValidators: true,
-    });
-    res.send("user updated successfully");
-    console.log(user);
-  } catch (error) {
-    res.status(400).send(`error updating the user",${error}`);
-  }
-});
 app.delete("/user", async (req: Request, res: Response) => {
   const id = req.body.id;
   try {
