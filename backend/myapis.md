@@ -9,7 +9,7 @@ post/profile/edit
 post/profile/passsword
 
 # ConnectionRequest Router
-post/request/send/ignore/user:id
+post/request/send/uninterested/user:id
 post/request/send/interested/user:id
 post/request/review/rejected/request:id
 post/request/review/accpeted/request:id

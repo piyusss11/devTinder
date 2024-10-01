@@ -66,7 +66,10 @@ const userSchema = new mongoose.Schema<IUser>(
     },
     gender: {
       type: String,
-      enum: ["M", "F", "O"],
+      enum: {
+        values: ["M", "F", "O"],
+        message: "{VALUE} is not a gender",
+      },
     },
     photoUrl: {
       type: String,
@@ -92,19 +95,21 @@ const userSchema = new mongoose.Schema<IUser>(
 // Custom method to generate JWT
 userSchema.methods.getJWT = function () {
   const user = this as IUser;
-  const token = jwt.sign({ _id: user._id },"Piyush@123", {
+  const token = jwt.sign({ _id: user._id }, "Piyush@123", {
     expiresIn: "1d",
   });
   return token;
 };
 
 // Custom method to validate the password
-userSchema.methods.validatePassword = async function (passwordInputByUser: string) {
+userSchema.methods.validatePassword = async function (
+  passwordInputByUser: string
+) {
   const user = this as IUser;
   return await bcrypt.compare(passwordInputByUser, user.password);
 };
 
-// Export the User model 
+// Export the User model
 const User: Model<IUser> = mongoose.model<IUser>("User", userSchema);
 
 export default User;
