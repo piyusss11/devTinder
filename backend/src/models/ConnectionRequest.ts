@@ -1,7 +1,8 @@
 import mongoose, { Document, Model } from "mongoose";
+import { IUser } from "./User";
 export interface Irequest extends Document {
-  toUserId: mongoose.Schema.Types.ObjectId;
-  fromUserId: mongoose.Schema.Types.ObjectId;
+  toUserId: mongoose.Schema.Types.ObjectId  | IUser
+  fromUserId: mongoose.Schema.Types.ObjectId | IUser
   status: "interested" | "uninterested" | "accepted" | "rejected";
 }
 

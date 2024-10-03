@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 
 // Define the interface for the User document, including custom methods
 export interface IUser extends Document {
+  _id: mongoose.Types.ObjectId;
   firstName: string;
   lastName?: string;
   userName: string;

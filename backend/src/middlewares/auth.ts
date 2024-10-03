@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import User, { IUser } from "../models/User";
+import mongoose from "mongoose";
 declare global {
   namespace Express {
     interface Request {

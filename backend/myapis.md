@@ -9,12 +9,10 @@ post/profile/edit
 post/profile/passsword
 
 # ConnectionRequest Router
-post/request/send/uninterested/user:id
-post/request/send/interested/user:id
-post/request/review/rejected/request:id
-post/request/review/accpeted/request:id
+post/request/send/:status/user:id // satuts = interested or uninterested 
+post/request/review/:status/request:id // status = accepted or rejected
 
 # User Router
+get/requests/recieved 
 get/user/feed
 get/user/matches or connections
-get/requests/recieved 
