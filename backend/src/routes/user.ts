@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import ConnectionRequest from "../models/ConnectionRequest";
 import { userAuth } from "../middlewares/auth";
-import { IUser } from "../models/User";
+import User, { IUser } from "../models/User";
 const userRouter = express.Router();
 
 const safeDataToPass =
@@ -35,7 +35,6 @@ userRouter.get(
   userAuth,
   async (req: Request, res: Response) => {
     try {
-    
       const loggedInUser = req.user;
 
       // Fetch the user matches where the logged-in user is either the sender or the recipient of an accepted connection request
@@ -74,5 +73,45 @@ userRouter.get(
     }
   }
 );
+
+userRouter.get("/user/feed", userAuth, async (req: Request, res: Response) => {
+  try {
+    // i want to see the user except
+    // myself
+    // people who have sent me a request or i have sent a request to them
+    // my connections
+    const loggedInUser = req.user;
+    const page = parseInt(req.query.page as string) || 1;
+    let limit = parseInt(req.query.limit as string) || 10;
+    limit = limit > 50 ? 50 : limit;
+    const skip = (page - 1) * limit;
+
+    const requests = await ConnectionRequest.find({
+      $or: [{ toUserId: loggedInUser._id }, { fromUserId: loggedInUser._id }],
+    }).select("toUserId fromUserId");
+
+    const hiddenUsers = new Set();
+    requests.forEach((request) => {
+      hiddenUsers.add(request.toUserId.toString());
+      hiddenUsers.add(request.fromUserId.toString());
+    });
+
+    const users = await User.find({
+      $and: [
+        { _id: { $nin: Array.from(hiddenUsers) } },
+        { _id: { $ne: loggedInUser._id } },
+      ],
+    })
+      .select(safeDataToPass)
+      .skip(skip)
+      .limit(limit);
+    // console.log(skip,req.query.page)
+    // console.log(limit,req.query.limit)
+    
+    res.json({ message: "user feed fetched successfully", data: users });
+  } catch (error) {
+    res.status(400).send(`error finding the users",${error}`);
+  }
+});
 
 export default userRouter;

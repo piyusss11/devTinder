@@ -28,39 +28,3 @@ connectDB()
     console.log(error);
   });
   
-  // extra routes 
-app.get("/user", async (req: Request, res: Response) => {
-  const { emailId } = req.body;
-  try {
-    const users = await User.find({ emailId: emailId });
-    if (users.length === 0) {
-      res.status(400).send("no user found");
-    } else {
-      res.send(users);
-    }
-  } catch (error) {
-    res.status(400).send(`error finding the users",${error}`);
-  }
-});
-
-app.delete("/user", async (req: Request, res: Response) => {
-  const id = req.body.id;
-  try {
-    const user = await User.findByIdAndDelete(id);
-    res.send("user deleted successfully");
-  } catch (error) {
-    res.status(400).send(`error deleting the user",${error}`);
-  }
-});
-app.get("/feed", async (req: Request, res) => {
-  try {
-    const users = await User.find();
-    if (users.length === 0) {
-      res.status(400).send("no user found");
-    } else {
-      res.send(users);
-    }
-  } catch (error) {
-    res.status(400).send(`error finding the users",${error}`);
-  }
-});
