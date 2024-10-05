@@ -2,7 +2,7 @@ import React from 'react'
 
 const Navbar: React.FC = () => {
   return (
-    <div>Navbar</div>
+    <div className='text-[#d6d6d6]'>Navbar</div>
   )
 }
 
