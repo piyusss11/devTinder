@@ -1,24 +1,31 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import BackGroundImage from "../assets/BgImg.jpg";
 import axios from "axios";
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState("yash@gmail.com");
-  const [password, setPassword] = useState("Yash@123");
+  const [emailId, setEmailId] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleLogin = async () => {
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault(); // Prevent page refresh
     try {
-      const response = await axios.post("http://localhost:3000/login",{
-        email,
-        password
-      })
-      console.log(response)
-      
+      const response = await axios.post(
+        "http://localhost:3000/login",
+        {
+          emailId,
+          password,
+        },
+        { withCredentials: true }
+      );
+      console.log(response.data); // Handle login success (store token, redirect, etc.)
+      navigate("/feed");
     } catch (error) {
-      console.log(error);
+      console.error("Login failed:", error); // Show error to the user
     }
   };
+
   return (
     <div
       className="min-h-screen flex items-center justify-center bg-cover bg-center"
@@ -31,7 +38,7 @@ const Login: React.FC = () => {
 
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md z-20">
         <h2 className="text-3xl font-bold mb-6 text-center">Login</h2>
-        <form>
+        <form onSubmit={handleLogin}>
           <div className="mb-4">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
@@ -45,10 +52,8 @@ const Login: React.FC = () => {
               id="email"
               placeholder="Enter your email"
               required
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
+              value={emailId}
+              onChange={(e) => setEmailId(e.target.value)}
             />
           </div>
           <div className="mb-6">
@@ -65,19 +70,17 @@ const Login: React.FC = () => {
               placeholder="Enter your password"
               required
               value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           <div className="flex items-center justify-between">
-            <button onClick={handleLogin}
+            <button
               className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition"
               type="submit"
             >
               Login
             </button>
-            <Link to="/register" className="text-red-500 hover:text-red-600">
+            <Link to="/signup" className="text-red-500 hover:text-red-600">
               Create an account
             </Link>
           </div>

@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import Body from "./pages/Body";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
+import Signup from "./pages/SignUp";
 
 function App() {
   return (<>
@@ -12,7 +12,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Body />}></Route>
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/signup" element={<Signup />} />
         </Routes>
       </BrowserRouter>
      {/* </div> */}

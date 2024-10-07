@@ -6,10 +6,15 @@ import profileRouter from "./routes/profile";
 import authRouter from "./routes/auth";
 import requestRouter from "./routes/request";
 import userRouter from "./routes/user";
-import cors from "cors"
+import cors from "cors";
 const app = express();
 
-app.use(cors())
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 
@@ -17,7 +22,7 @@ app.use(cookieParser());
 app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", requestRouter);
-app.use("/",userRouter)
+app.use("/", userRouter);
 
 const port = 3000;
 connectDB()
@@ -29,4 +34,3 @@ connectDB()
   .catch((error) => {
     console.log(error);
   });
-  
