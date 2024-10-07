@@ -6,8 +6,10 @@ import profileRouter from "./routes/profile";
 import authRouter from "./routes/auth";
 import requestRouter from "./routes/request";
 import userRouter from "./routes/user";
+import cors from "cors"
 const app = express();
 
+app.use(cors())
 app.use(express.json());
 app.use(cookieParser());
 
