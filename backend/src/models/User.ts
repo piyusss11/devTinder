@@ -67,8 +67,9 @@ const userSchema = new mongoose.Schema<IUser>(
     },
     gender: {
       type: String,
+      default:"",
       enum: {
-        values: ["M", "F", "O"],
+        values: ["M", "F", "O",""],
         message: "{VALUE} is not a gender",
       },
     },
@@ -83,6 +84,7 @@ const userSchema = new mongoose.Schema<IUser>(
       },
     },
     about: {
+      default:"",
       type: String,
       minLength: 70,
     },

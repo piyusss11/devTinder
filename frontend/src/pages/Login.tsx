@@ -2,11 +2,14 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import BackGroundImage from "../assets/BgImg.jpg";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
 
 const Login: React.FC = () => {
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent page refresh
@@ -19,7 +22,8 @@ const Login: React.FC = () => {
         },
         { withCredentials: true }
       );
-      console.log(response.data); // Handle login success (store token, redirect, etc.)
+      console.log(response.data);
+      dispatch(addUser(response.data));
       navigate("/feed");
     } catch (error) {
       console.error("Login failed:", error); // Show error to the user
