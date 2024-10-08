@@ -86,7 +86,6 @@ const userSchema = new mongoose.Schema<IUser>(
     about: {
       default:"",
       type: String,
-      minLength: 70,
     },
     skills: {
       type: [String],
