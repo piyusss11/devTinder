@@ -18,7 +18,7 @@ export const userAuth = async (
     //reading token
     const { token } = req.cookies;
     if (!token) {
-      return res.status(401).send("Token invalid");
+      return res.status(401).send("Token invalid, Please Login");
     }
     // verfying token
     const decoded = jwt.verify(token, "Piyush@123") as jwt.JwtPayload;

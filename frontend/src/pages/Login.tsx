@@ -4,6 +4,7 @@ import BackGroundImage from "../assets/BgImg.jpg";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
+import { toast, ToastContainer } from "react-toastify";
 
 const Login: React.FC = () => {
   const [emailId, setEmailId] = useState("");
@@ -24,8 +25,10 @@ const Login: React.FC = () => {
       );
       console.log(response.data);
       dispatch(addUser(response.data));
-      navigate("/feed");
+      // toast.success("Login successful!");
+      navigate("/");
     } catch (error) {
+      toast.error("Login failed: Invalid email or password");
       console.error("Login failed:", error); // Show error to the user
     }
   };
@@ -89,6 +92,7 @@ const Login: React.FC = () => {
             </Link>
           </div>
         </form>
+        <ToastContainer />
       </div>
     </div>
   );

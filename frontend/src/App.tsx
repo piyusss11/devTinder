@@ -1,21 +1,26 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-
 import Body from "./pages/Body";
 import Login from "./pages/Login";
 import Signup from "./pages/SignUp";
-import Dashboard from "./pages/Dashboard";
+import Feed from "./pages/Feed";
+import { useSelector } from "react-redux";
+import { RootState } from "./utils/appStore";
 
 function App() {
-  return (<>
-      <BrowserRouter basename="/">
-        <Routes>
-          <Route path="/" element={<Body />}></Route>
+  const user = useSelector((state: RootState) => state.user);
+  const isUserPresent = user._id.length > 0;
+  console.log(user._id.length > 0);
+
+  return (
+    <BrowserRouter basename="/">
+      <Routes>
+        <Route path="/" element={isUserPresent ? <Feed /> : <Body />}>
+          <Route path="/" element={<Feed />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-        </Routes>
-      </BrowserRouter>
-  </>
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
