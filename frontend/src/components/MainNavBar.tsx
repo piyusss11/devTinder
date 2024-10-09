@@ -5,18 +5,33 @@ import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { useSelector } from "react-redux";
 import { RootState } from "../utils/appStore";
 import logo from "../assets/logo.jpg";
+import { Local_Url } from "../utils/constants";
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
 
 const MainNavBar: React.FC = () => {
   const user = useSelector((state: RootState) => state.user);
-  const userImage = user.photoUrl || "https://your-default-image-url.com"; 
+  const userImage = user.photoUrl || "https://your-default-image-url.com";
+
+  const logout = async () => {
+    try {
+      await axios.post(`${Local_Url}/logout`, { withCredentials: true });
+      
+   
+      toast.success("Logout Successful");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <nav className="relative bg-[#F58F7C]">
       <div className="container mx-auto flex justify-between items-center p-4">
         {/* Brand Logo or Home Link */}
-      
-          <Link to="/"><img className="w-10 " src={logo} alt="" /></Link>
-       
+
+        <Link to="/">
+          <img className="w-10 " src={logo} alt="" />
+        </Link>
 
         {/* Navigation Links and User Info */}
         <div className="flex items-center space-x-6">
@@ -24,7 +39,9 @@ const MainNavBar: React.FC = () => {
           <Link to="/connections" className="text-white">
             Connections
           </Link>
-          <span className="text-white hidden md:block">Welcome, <span className="text-[#2C2B30]">{user.firstName}</span></span>
+          <span className="text-white hidden md:block">
+            Welcome, <span className="text-[#2C2B30]">{user.firstName}</span>
+          </span>
 
           {/* Profile Dropdown Menu */}
           <div className="relative">
@@ -70,7 +87,7 @@ const MainNavBar: React.FC = () => {
                   <Menu.Item>
                     {({ active }) => (
                       <button
-                        onClick={() => console.log("Logged out")}
+                        onClick={logout}
                         className={`${
                           active ? "bg-[#F58F7C] text-white" : "text-gray-900"
                         } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
@@ -92,6 +109,7 @@ const MainNavBar: React.FC = () => {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </nav>
   );
 };

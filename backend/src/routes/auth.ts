@@ -10,7 +10,8 @@ authRouter.post("/signup", async (req: Request, res: Response) => {
 
   try {
     validateSignUpData(req);
-    const { firstName, userName, lastName, emailId, password, photoUrl } = req.body;
+    const { firstName, userName, lastName, emailId, password, photoUrl } =
+      req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
       firstName,
@@ -38,7 +39,13 @@ authRouter.post("/login", async (req: Request, res: Response) => {
       // creating a cookie with jwt
       const token = user.getJWT();
       // sending token in cookie
-      res.cookie("token", token);
+      res.cookie("token", token, {
+        httpOnly: true,   // Prevent access from JavaScript
+        secure: process.env.NODE_ENV === "production", // Only set secure in production
+        sameSite: "strict", // Ensure same-site cookie for security
+        maxAge: 24 * 60 * 60 * 1000, // 1 day expiration
+        path: "/"
+      });
       res.send(user);
     } else {
       throw new Error("Invalid Credentials");
@@ -48,9 +55,10 @@ authRouter.post("/login", async (req: Request, res: Response) => {
   }
 });
 
-authRouter.post("/logout", (req: Request, res: Response) => {
-  res.clearCookie("token"); // redirect to login or register page
+authRouter.post("/logout",async (req: Request, res: Response) => {
+  res.clearCookie("token", { path: "/" });
+  // redirect to login or register page
   res.send("user logged out successfully");
-})
+});
 
 export default authRouter;
