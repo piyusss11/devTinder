@@ -40,12 +40,16 @@ authRouter.post("/login", async (req: Request, res: Response) => {
       const token = user.getJWT();
       // sending token in cookie
       res.cookie("token", token, {
-        httpOnly: true,   // Prevent access from JavaScript
-        secure: process.env.NODE_ENV === "production", // Only set secure in production
-        sameSite: "strict", // Ensure same-site cookie for security
+        httpOnly: true,
+        secure:true,
+        // secure: process.env.NODE_ENV === "production", // Ensure only on HTTPS
+        sameSite: "none", // Allow cross-site requests
         maxAge: 24 * 60 * 60 * 1000, // 1 day expiration
         path: "/"
       });
+      const cookies = res.get("Set-Cookie")
+      console.log("Response Cookies:", cookies);
+      
       res.send(user);
     } else {
       throw new Error("Invalid Credentials");
@@ -56,7 +60,19 @@ authRouter.post("/login", async (req: Request, res: Response) => {
 });
 
 authRouter.post("/logout",async (req: Request, res: Response) => {
-  res.clearCookie("token", { path: "/" });
+ 
+// res.cookie("token","",{
+//   httpOnly:true,
+//   sameSite:"none",
+//   secure:false,
+//   path:"/",
+//   expires:new Date(0)
+// })
+res.clearCookie("token", { path: "/", sameSite: "none", secure: true ,httpOnly:true});
+const cookies = res.get("Set-Cookie"); // Get the "Set-Cookie" headers
+  console.log("Response Cookies:", cookies);
+
+
   // redirect to login or register page
   res.send("user logged out successfully");
 });

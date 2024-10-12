@@ -1,29 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import BackGroundImage from "../assets/BgImg.jpg";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { toast, ToastContainer } from "react-toastify";
+import { Local_Url } from "../utils/constants";
+import { RootState } from "../utils/appStore";
 
 const Login: React.FC = () => {
-  const [emailId, setEmailId] = useState("");
-  const [password, setPassword] = useState("");
+  const [emailId, setEmailId] = useState("yash@gmail.com");
+  const [password, setPassword] = useState("Yash@123");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const userData = useSelector((state: RootState) => state.user);
+  
+
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent page refresh
     try {
       const response = await axios.post(
-        "http://localhost:3000/login",
+        `${Local_Url}/login`,
         {
           emailId,
           password,
         },
         { withCredentials: true }
       );
-      console.log(response.data);
+      // console.log(response.data);
       dispatch(addUser(response.data));
       // toast.success("Login successful!");
       navigate("/");

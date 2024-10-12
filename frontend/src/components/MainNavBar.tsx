@@ -2,23 +2,28 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Menu, MenuButton, MenuItems } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../utils/appStore";
 import logo from "../assets/logo.jpg";
 import { Local_Url } from "../utils/constants";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
+import { removeUser } from "../utils/userSlice";
 
 const MainNavBar: React.FC = () => {
   const user = useSelector((state: RootState) => state.user);
   const userImage = user.photoUrl || "https://your-default-image-url.com";
-
+  const dispatch  = useDispatch()
+  console.log(document.cookie)
   const logout = async () => {
     try {
-      await axios.post(`${Local_Url}/logout`, { withCredentials: true });
-      
-   
+      const response = await axios.post(`${Local_Url}/logout`,{}, { withCredentials: true });
+      console.log(response.headers.get("Set-Cookie"));
       toast.success("Logout Successful");
+      dispatch(removeUser());
+      // setTimeout(() => {
+      //   window.location.reload();  // This reloads the current page
+      // }, 1500);
     } catch (error) {
       console.log(error);
     }
