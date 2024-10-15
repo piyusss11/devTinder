@@ -14,11 +14,11 @@ const MainNavBar: React.FC = () => {
   const user = useSelector((state: RootState) => state.user);
   const userImage = user.photoUrl || "https://your-default-image-url.com";
   const dispatch  = useDispatch()
-  console.log(document.cookie)
+  // console.log(document.cookie)
   const logout = async () => {
     try {
       const response = await axios.post(`${Local_Url}/logout`,{}, { withCredentials: true });
-      console.log(response.headers.get("Set-Cookie"));
+      // console.log(response.headers.get("Set-Cookie"));
       toast.success("Logout Successful");
       dispatch(removeUser());
       // setTimeout(() => {
@@ -106,6 +106,7 @@ const MainNavBar: React.FC = () => {
             </Menu>
           </div>
           <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white">
+            
             <img
               src={userImage}
               alt="User"

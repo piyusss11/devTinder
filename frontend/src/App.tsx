@@ -47,7 +47,7 @@ function App() {
   };
   useEffect(() => {
     fetchUser();
-  }, []);
+  }, [user]);
   
   // console.log(isUserPresent);
 

@@ -6,6 +6,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";
 import { RootState } from "../utils/appStore";
 import { Local_Url } from "../utils/constants";
+import MainNavBar from "../components/MainNavBar";
+import ProfileCard from "../components/ProfileCard";
 
 const EditProfile: React.FC = () => {
   const user = useSelector((state: RootState) => state.user);
@@ -54,6 +56,7 @@ const EditProfile: React.FC = () => {
 
       setTimeout(() => {
         navigate("/"); // Redirect to profile view page
+        document.location.reload();
       }, 3000);
     } catch (error) {
       console.error("Profile update failed:", error);
@@ -89,41 +92,22 @@ const EditProfile: React.FC = () => {
   };
 
   return (
-    <div
-      style={{ backgroundImage: `url(${user.photoUrl})` }}
-      className="min-h-screen flex items-center justify-center bg-cover bg-gradient-to-b from-[#1F1E24] to-[#2C2B30] text-[#D6D6D6]"
-    >
-      {/* Overlay effect */}
-      <div className="absolute inset-0 bg-black opacity-70"></div>
+    <div className="min-h-screen flex flex-col bg-[#1F1E24]">
+    {/* Main NavBar */}
+    <MainNavBar />
 
-      <div className="bg-[#3A3A3F] bg-opacity-90 p-10 rounded-lg shadow-2xl w-full max-w-4xl z-20 relative max-h-screen overflow-y-scroll">
-      <div className="flex items-center justify-between mb-8">
-      {/* Back to Profile Button */}
-      <button
-        onClick={() => navigate("/profile")}
-        className="px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 transition"
-      >
-        Back to Profile
-      </button>
-      
-      {/* Edit Profile Heading */}
-      <h2 className="text-4xl font-bold text-center text-[#F58F7C] flex-1 mr-24">
-        Edit Profile
-      </h2>
-    </div>
-        <form
-          onSubmit={handleProfileUpdate}
-          className="grid grid-cols-1 md:grid-cols-2 gap-6"
-        >
+    {/* Page Content */}
+    <div className="flex flex-col md:flex-row mt-10 max-w-7xl mx-auto w-full gap-10">
+      {/* Left Column: Edit Profile Form */}
+      <div className="bg-[#3A3A3F] bg-opacity-90 p-10 rounded-lg shadow-2xl w-full md:w-1/2">
+        <h2 className="text-4xl font-bold text-[#F58F7C] mb-6">Edit Profile</h2>
+        <form onSubmit={handleProfileUpdate} className="grid grid-cols-1 gap-6">
           <div>
-            <label
-              className="block text-[#F2C4CE] font-semibold mb-2"
-              htmlFor="firstName"
-            >
+            <label className="block text-[#F2C4CE] font-semibold mb-2" htmlFor="firstName">
               First Name
             </label>
             <input
-              className="w-full px-3 py-2 text-[#1F1E24] border border-[#F58F7C] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F58F7C]"
+              className="w-full px-3 py-2 text-[#1F1E24] border border-[#F58F7C] rounded-lg focus:outline-none"
               type="text"
               id="firstName"
               value={firstName}
@@ -133,14 +117,11 @@ const EditProfile: React.FC = () => {
           </div>
 
           <div>
-            <label
-              className="block text-[#F2C4CE] font-semibold mb-2"
-              htmlFor="lastName"
-            >
+            <label className="block text-[#F2C4CE] font-semibold mb-2" htmlFor="lastName">
               Last Name
             </label>
             <input
-              className="w-full px-3 py-2 text-[#1F1E24] border border-[#F58F7C] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F58F7C]"
+              className="w-full px-3 py-2 text-[#1F1E24] border border-[#F58F7C] rounded-lg focus:outline-none"
               type="text"
               id="lastName"
               value={lastName}
@@ -149,14 +130,11 @@ const EditProfile: React.FC = () => {
           </div>
 
           <div>
-            <label
-              className="block text-[#F2C4CE] font-semibold mb-2"
-              htmlFor="userName"
-            >
+            <label className="block text-[#F2C4CE] font-semibold mb-2" htmlFor="userName">
               User Name
             </label>
             <input
-              className="w-full px-3 py-2 text-[#1F1E24] border border-[#F58F7C] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F58F7C]"
+              className="w-full px-3 py-2 text-[#1F1E24] border border-[#F58F7C] rounded-lg focus:outline-none"
               type="text"
               id="userName"
               value={userName}
@@ -166,14 +144,11 @@ const EditProfile: React.FC = () => {
           </div>
 
           <div>
-            <label
-              className="block text-[#F2C4CE] font-semibold mb-2"
-              htmlFor="age"
-            >
+            <label className="block text-[#F2C4CE] font-semibold mb-2" htmlFor="age">
               Age
             </label>
             <input
-              className="w-full px-3 py-2 text-[#1F1E24] border border-[#F58F7C] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F58F7C]"
+              className="w-full px-3 py-2 text-[#1F1E24] border border-[#F58F7C] rounded-lg focus:outline-none"
               type="number"
               id="age"
               value={age || ""}
@@ -182,14 +157,11 @@ const EditProfile: React.FC = () => {
           </div>
 
           <div>
-            <label
-              className="block text-[#F2C4CE] font-semibold mb-2"
-              htmlFor="gender"
-            >
+            <label className="block text-[#F2C4CE] font-semibold mb-2" htmlFor="gender">
               Gender
             </label>
             <select
-              className="w-full px-3 py-2 text-[#1F1E24] border border-[#F58F7C] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F58F7C]"
+              className="w-full px-3 py-2 text-[#1F1E24] border border-[#F58F7C] rounded-lg focus:outline-none"
               id="gender"
               value={gender}
               onChange={(e) => setGender(e.target.value as "M" | "F" | "O")}
@@ -201,25 +173,19 @@ const EditProfile: React.FC = () => {
             </select>
           </div>
 
-          {/* Photo URL */}
           <div className="col-span-2">
-            <label
-              className="block text-[#F2C4CE] font-semibold mb-2"
-              htmlFor="photoUrl"
-            >
+            <label className="block text-[#F2C4CE] font-semibold mb-2" htmlFor="photoUrl">
               Photo URL
             </label>
             <input
-              className="w-full px-3 py-2 text-[#1F1E24] border border-[#F58F7C] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F58F7C]"
+              className="w-full px-3 py-2 text-[#1F1E24] border border-[#F58F7C] rounded-lg focus:outline-none"
               type="text"
               id="photoUrl"
               value={photoUrl}
               onChange={(e) => setPhotoUrl(e.target.value)}
-              placeholder="Enter the URL of your profile photo"
             />
-            {/* Image preview */}
             {photoUrl && (
-              <div className="mt-10 flex justify-center">
+              <div className="mt-4 flex justify-center">
                 <img
                   src={photoUrl}
                   alt="Profile Preview"
@@ -230,31 +196,24 @@ const EditProfile: React.FC = () => {
           </div>
 
           <div className="col-span-2">
-            <label
-              className="block text-[#F2C4CE] font-semibold mb-2"
-              htmlFor="about"
-            >
+            <label className="block text-[#F2C4CE] font-semibold mb-2" htmlFor="about">
               About
             </label>
             <textarea
-              className="w-full px-3 py-2 text-[#1F1E24] border border-[#F58F7C] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F58F7C]"
+              className="w-full px-3 py-2 text-[#1F1E24] border border-[#F58F7C] rounded-lg focus:outline-none"
               id="about"
               value={about}
               onChange={(e) => setAbout(e.target.value)}
-              placeholder="Tell us about yourself"
             />
           </div>
 
           <div className="col-span-2">
-            <label
-              className="block text-[#F2C4CE] font-semibold mb-2"
-              htmlFor="skills"
-            >
+            <label className="block text-[#F2C4CE] font-semibold mb-2" htmlFor="skills">
               Skills
             </label>
             <div className="flex items-center">
               <input
-                className="flex-1 px-3 py-2 text-[#1F1E24] border border-[#F58F7C] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F58F7C]"
+                className="flex-1 px-3 py-2 text-[#1F1E24] border border-[#F58F7C] rounded-lg focus:outline-none"
                 type="text"
                 id="skills"
                 value={newSkill}
@@ -263,22 +222,22 @@ const EditProfile: React.FC = () => {
               />
               <button
                 type="button"
-                className="ml-3 px-4 py-2 bg-[#F58F7C] text-white rounded-lg hover:bg-[#D97363] transition"
+                className="ml-3 px-4 py-2 bg-[#F58F7C] text-white rounded-lg"
                 onClick={handleSkillAdd}
               >
                 Add
               </button>
             </div>
-            <div className="mt-3 space-y-2 space-x-2">
+            <div className="mt-3">
               {skills.map((skill) => (
                 <span
                   key={skill}
-                  className="inline-block bg-[#F58F7C] text-white px-3 py-1 rounded-full"
+                  className="inline-block bg-[#F58F7C] text-white px-3 py-1 rounded-full mr-2 mb-2"
                 >
                   {skill}
                   <button
                     type="button"
-                    className="ml-2 text-sm text-gray-100 hover:text-gray-300"
+                    className="ml-2 text-sm text-gray-100"
                     onClick={() => handleSkillRemove(skill)}
                   >
                     &times;
@@ -290,24 +249,29 @@ const EditProfile: React.FC = () => {
 
           <div className="col-span-2 flex items-center justify-between mt-4">
             <button
-              className="px-6 py-2 bg-gradient-to-r from-[#F58F7C] to-[#E06E64] text-white font-semibold rounded-lg hover:shadow-lg transition"
+              className="px-6 py-2 bg-gradient-to-r from-[#F58F7C] to-[#E06E64] text-white font-semibold rounded-lg"
               type="submit"
             >
               Update Profile
             </button>
             <button
               type="button"
-              className="px-6 py-2 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 transition"
+              className="px-6 py-2 bg-gray-500 text-white font-semibold rounded-lg"
               onClick={handlePasswordChange}
             >
               Change Password
             </button>
           </div>
         </form>
-
         <ToastContainer />
       </div>
+
+      {/* Right Column: Profile Card */}
+      <div className="w-full md:w-1/2 flex  justify-center">
+        <ProfileCard _id={user._id} userName={userName} photoUrl={photoUrl} about={about} />
+      </div>
     </div>
+  </div>
   );
 };
 
