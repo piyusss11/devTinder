@@ -16,6 +16,7 @@ const Feed: React.FC = () => {
 
 
   const getFeed = async () => {
+    if(feed.length > 0) return
     try {
       const feed = await axios.get(`${Local_Url}/user/feed?page=1&limit=10`,{withCredentials:true});
       
@@ -28,20 +29,18 @@ const Feed: React.FC = () => {
   };
   const sendRegqIn = async (id: string) => {
     try {
-      await axios.post(`${Local_Url}/request/send/interested/${id}`);
+      await axios.post(`${Local_Url}/request/send/interested/${id}`,{withCredentials:true});
       toast.success("Request sent successfully");
-      console.log(document.cookie)
       
     } catch (error) {
       toast.warn("Cant send");
-      console.log(document.cookie)
 
       console.log(error);
     }
   };
   const sendReqUnin = async (id: string) => {
     try {
-      await axios.post(`${Local_Url}/request/send/uninterested/${id}`);
+      await axios.post(`${Local_Url}/request/send/uninterested/${id}`,{withCredentials:true});
       toast.success("We got it you dont like them around");
     } catch (error) {
       console.log(error);

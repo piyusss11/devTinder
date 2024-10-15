@@ -12,60 +12,35 @@ const EditProfile: React.FC = () => {
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
   const [userName, setUserName] = useState(user.userName);
-  const [age, setAge] = useState<number | undefined>(undefined);
+  const [age, setAge] = useState<number | undefined>(user.age);
   const [gender, setGender] = useState<"M" | "F" | "O" | "">("");
   const [photoUrl, setPhotoUrl] = useState(user.photoUrl);
   const [about, setAbout] = useState(user.about);
-  const [skills, setSkills] = useState<string[]>([]);
+  const [skills, setSkills] = useState<string[]>(user.skills);
   const [newSkill, setNewSkill] = useState("");
 
   const navigate = useNavigate();
 
   // Load profile data (assumed user is already logged in)
-  useEffect(() => {
-    // const loadProfile = async () => {
-    //   try {
-    //     const response = await axios.get(`${Local_Url}/profile`);
-    //     const {
-    //       firstName,
-    //       lastName,
-    //       userName,
-    //       age,
-    //       gender,
-    //       photoUrl,
-    //       about,
-    //       skills,
-    //     } = response.data;
-
-    //     setFirstName(firstName);
-    //     setLastName(lastName);
-    //     setUserName(userName);
-    //     setAge(age);
-    //     setGender(gender || "");
-    //     setPhotoUrl(photoUrl);
-    //     setAbout(about || "");
-    //     setSkills(skills || []);
-    //   } catch (error) {
-    //     console.error("Error loading profile:", error);
-    //   }
-    // };
-
-    // loadProfile();
-  }, []);
+  useEffect(() => {}, []);
 
   const handleProfileUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.patch(`${Local_Url}/profile/edit`, {
-        firstName,
-        lastName,
-        userName,
-        age,
-        gender,
-        photoUrl,
-        about,
-        skills,
-      });
+      const response = await axios.patch(
+        `${Local_Url}/profile/edit`,
+        {
+          firstName,
+          lastName,
+          userName,
+          age,
+          gender,
+          photoUrl,
+          about,
+          skills,
+        },
+        { withCredentials: true }
+      );
 
       toast.success("Profile updated successfully!", {
         position: "top-right",
@@ -78,18 +53,30 @@ const EditProfile: React.FC = () => {
       });
 
       setTimeout(() => {
-        navigate("/profile"); // Redirect to profile view page
+        navigate("/"); // Redirect to profile view page
       }, 3000);
     } catch (error) {
       console.error("Profile update failed:", error);
-      toast.error("Profile update failed! Please try again.");
+      toast.error("Profile update failed. Please try again.");
     }
   };
 
   const handleSkillAdd = () => {
     if (newSkill && !skills.includes(newSkill)) {
-      setSkills([...skills, newSkill]);
-      setNewSkill("");
+      if (skills.length < 10) {
+        setSkills([...skills, newSkill]);
+        setNewSkill("");
+      } else {
+        toast.error("You can only add up to 10 skills.", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
     }
   };
 
@@ -110,9 +97,20 @@ const EditProfile: React.FC = () => {
       <div className="absolute inset-0 bg-black opacity-70"></div>
 
       <div className="bg-[#3A3A3F] bg-opacity-90 p-10 rounded-lg shadow-2xl w-full max-w-4xl z-20 relative max-h-screen overflow-y-scroll">
-        <h2 className="text-4xl font-extrabold text-center mb-8 text-[#F58F7C]">
-          Edit Profile
-        </h2>
+      <div className="flex items-center justify-between mb-8">
+      {/* Back to Profile Button */}
+      <button
+        onClick={() => navigate("/profile")}
+        className="px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 transition"
+      >
+        Back to Profile
+      </button>
+      
+      {/* Edit Profile Heading */}
+      <h2 className="text-4xl font-bold text-center text-[#F58F7C] flex-1 mr-24">
+        Edit Profile
+      </h2>
+    </div>
         <form
           onSubmit={handleProfileUpdate}
           className="grid grid-cols-1 md:grid-cols-2 gap-6"
