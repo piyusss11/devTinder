@@ -19,8 +19,13 @@ const requestsSlice = createSlice({
     addRequests(state, action: PayloadAction<IRequest[]>) {
       return action.payload;
     },
-    // Remove all requests
-    removeRequests() {
+    // removeOneRequest(state, action: PayloadAction<Iuser>) {
+      //   const newArr = state.filter((req) => req._id !== action.payload);
+      //   return newArr;
+      // },
+      
+      // Remove all requests
+      removeRequests() {
       return initialState;
     },
   },
