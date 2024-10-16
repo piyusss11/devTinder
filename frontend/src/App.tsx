@@ -16,6 +16,7 @@ import { Local_Url } from "./utils/constants";
 import { useEffect } from "react";
 import { addUser } from "./utils/userSlice";
 import Profile from "./pages/Profile";
+import TogglePage from "./pages/TogglePage";
 
 function App() {
   const user = useSelector((state: RootState) => state.user);
@@ -61,6 +62,7 @@ function App() {
             <Route path="profile" element={<Profile />} />
             <Route path="profile/edit" element={<EditProfile />} />
             <Route path="feedPage" element={<FeedPage />} />
+            <Route path="connections" element={<TogglePage />} />
             <Route path={"login"} element={<Navigate to="/" replace />} />
             <Route path={"signup"} element={<Navigate to="/" replace />} />
           </Route>

@@ -27,22 +27,19 @@ const Feed: React.FC = () => {
       console.log(error);
     }
   };
-  const sendRegqIn = async (id: string) => {
+  const handleReq = async (statusOfReq:string,id: string) => {
     try {
-      await axios.post(`${Local_Url}/request/send/interested/${id}`,{withCredentials:true});
-      toast.success("Request sent successfully");
+      await axios.post(`${Local_Url}/request/send/${statusOfReq}/${id}`,{},{withCredentials:true});
+      if(statusOfReq === 'interested'){
+        toast.success("Request sent successfully");
+      }
+      if(statusOfReq === 'uninterested'){
+        toast.success("User Rejected succesfully");
+      }
       
     } catch (error) {
       toast.warn("Cant send");
 
-      console.log(error);
-    }
-  };
-  const sendReqUnin = async (id: string) => {
-    try {
-      await axios.post(`${Local_Url}/request/send/uninterested/${id}`,{withCredentials:true});
-      toast.success("We got it you dont like them around");
-    } catch (error) {
       console.log(error);
     }
   };
@@ -85,12 +82,12 @@ const Feed: React.FC = () => {
             <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
               <div className="flex space-x-6">
                 <FontAwesomeIcon
-                  onClick={()=>sendRegqIn(profile._id)}
+                  onClick={()=>handleReq('interested',profile._id)}
                   icon={faCheck}
                   className="text-4xl text-[#F58F7C] hover:scale-110 transition-transform duration-200 ease-in-out cursor-pointer"
                 />
                 <FontAwesomeIcon
-                  onClick={()=>sendReqUnin(profile._id)}
+                  onClick={()=>handleReq('uninterested',profile._id)} 
                   icon={faTimes}
                   className="text-4xl text-[#F2C4CE] hover:scale-110 transition-transform duration-200 ease-in-out cursor-pointer"
                 />
