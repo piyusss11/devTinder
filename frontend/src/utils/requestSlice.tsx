@@ -17,7 +17,7 @@ const requestsSlice = createSlice({
   reducers: {
     // Add multiple requests
     addRequests(state, action: PayloadAction<IRequest[]>) {
-      return [...state, ...action.payload];
+      return action.payload;
     },
     // Remove all requests
     removeRequests() {

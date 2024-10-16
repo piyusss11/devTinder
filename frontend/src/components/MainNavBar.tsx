@@ -4,7 +4,7 @@ import { Menu, MenuButton, MenuItems } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../utils/appStore";
-import logo from "../assets/logo.jpg";
+import logo from "../assets/logo.png";
 import { Local_Url } from "../utils/constants";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";

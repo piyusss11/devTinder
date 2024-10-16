@@ -44,7 +44,7 @@ const Requests = () => {
     getRequests();
   }, []);
   return (
-    <div className="p-6 bg-[#3A3A3F] rounded-lg shadow-lg justify-center flex gap-4 flex-wrap">
+    <div className="p-6 bg-[#3A3A3F] rounded-lg justify-center flex gap-4 flex-wrap">
      {requests.length > 0 ? (
         requests.map((request) => (
           <RequestCards
