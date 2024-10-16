@@ -13,11 +13,11 @@ import { removeUser } from "../utils/userSlice";
 const MainNavBar: React.FC = () => {
   const user = useSelector((state: RootState) => state.user);
   const userImage = user.photoUrl || "https://your-default-image-url.com";
-  const dispatch  = useDispatch()
+  const dispatch = useDispatch();
   // console.log(document.cookie)
   const logout = async () => {
     try {
-      const response = await axios.post(`${Local_Url}/logout`,{}, { withCredentials: true });
+      await axios.post(`${Local_Url}/logout`, {}, { withCredentials: true });
       // console.log(response.headers.get("Set-Cookie"));
       toast.success("Logout Successful");
       dispatch(removeUser());
@@ -40,7 +40,6 @@ const MainNavBar: React.FC = () => {
 
         {/* Navigation Links and User Info */}
         <div className="flex items-center space-x-6">
-          {/* Connections Link */}
           <Link to="/connections" className="text-white">
             Connections
           </Link>
@@ -68,24 +67,24 @@ const MainNavBar: React.FC = () => {
                   <Menu.Item>
                     {({ active }) => (
                       <Link
-                        to="/profile/edit"
+                        to="/profile"
                         className={`${
                           active ? "bg-[#F58F7C] text-white" : "text-gray-900"
                         } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                       >
-                        Edit Profile
+                        Profile
                       </Link>
                     )}
                   </Menu.Item>
                   <Menu.Item>
                     {({ active }) => (
                       <Link
-                        to="/profile/password"
+                        to="/profile/edit"
                         className={`${
                           active ? "bg-[#F58F7C] text-white" : "text-gray-900"
                         } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                       >
-                        Change Password
+                        Edit Profile
                       </Link>
                     )}
                   </Menu.Item>
@@ -106,7 +105,6 @@ const MainNavBar: React.FC = () => {
             </Menu>
           </div>
           <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white">
-            
             <img
               src={userImage}
               alt="User"

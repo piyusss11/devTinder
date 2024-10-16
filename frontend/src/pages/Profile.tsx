@@ -15,7 +15,7 @@ const Profile: React.FC = () => {
 
       {/* Profile Section */}
       <div className="max-w-5xl mx-auto py-16 px-6 md:px-12">
-        <div className="bg-[#3A3A3F] bg-opacity-80 rounded-lg shadow-2xl p-8 md:p-12 lg:flex lg:space-x-12 transition transform hover:scale-105 hover:shadow-3xl">
+        <div className="bg-[#3A3A3F] bg-opacity-80 rounded-lg shadow-2xl p-8 md:p-12 lg:flex lg:space-x-12 ">
           
           {/* Profile Image Section */}
           <div className="flex-shrink-0 relative">
