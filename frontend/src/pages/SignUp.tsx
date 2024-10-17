@@ -12,6 +12,8 @@ const Signup: React.FC = () => {
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
+  const [age, setAge] = useState(0);
+  const [gender, setGender] = useState("");
   const navigate = useNavigate();
 
   const handleSignup = async (e: React.FormEvent) => {
@@ -24,10 +26,12 @@ const Signup: React.FC = () => {
         emailId,
         password,
         photoUrl,
+        age,
+        gender,
       });
 
-      console.log(response.data); 
-      
+      console.log(response.data);
+
       // Trigger toast notification
       toast.success("User created successfully! Redirecting to login...", {
         position: "top-right",
@@ -114,6 +118,43 @@ const Signup: React.FC = () => {
               required
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
+            />
+          </div>
+          <div>
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="gender"
+            >
+              Gender
+            </label>
+            <select
+              className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+              id="gender"
+              required
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
+            >
+              <option value="">Select Gender</option>
+              <option value="M">Male</option>
+              <option value="F">Female</option>
+              <option value="O">Other</option>
+            </select>
+          </div>
+          <div>
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="age"
+            >
+              Age
+            </label>
+            <input
+              className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+              type="number"
+              id="age"
+              placeholder="Age"
+              required
+              value={age}
+              onChange={(e) => setAge(Number(e.target.value))}
             />
           </div>
           <div>

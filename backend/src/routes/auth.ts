@@ -10,8 +10,17 @@ authRouter.post("/signup", async (req: Request, res: Response) => {
 
   try {
     validateSignUpData(req);
-    const { firstName, userName, lastName, emailId, password, photoUrl } =
-      req.body;
+    const {
+      firstName,
+      userName,
+      lastName,
+      emailId,
+      password,
+      photoUrl,
+      age,
+
+      gender,
+    } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
       firstName,
@@ -20,6 +29,9 @@ authRouter.post("/signup", async (req: Request, res: Response) => {
       emailId,
       password: hashedPassword,
       photoUrl,
+      age,
+    
+      gender,
     });
     await user.save();
     res.send("user created successfully");
@@ -41,15 +53,15 @@ authRouter.post("/login", async (req: Request, res: Response) => {
       // sending token in cookie
       res.cookie("token", token, {
         httpOnly: true,
-        secure:true,
+        secure: true,
         // secure: process.env.NODE_ENV === "production", // Ensure only on HTTPS
         sameSite: "none", // Allow cross-site requests
         maxAge: 24 * 60 * 60 * 1000, // 1 day expiration
-        path: "/"
+        path: "/",
       });
-      const cookies = res.get("Set-Cookie")
+      const cookies = res.get("Set-Cookie");
       console.log("Response Cookies:", cookies);
-      
+
       res.send(user);
     } else {
       throw new Error("Invalid Credentials");
@@ -59,19 +71,22 @@ authRouter.post("/login", async (req: Request, res: Response) => {
   }
 });
 
-authRouter.post("/logout",async (req: Request, res: Response) => {
- 
-// res.cookie("token","",{
-//   httpOnly:true,
-//   sameSite:"none",
-//   secure:false,
-//   path:"/",
-//   expires:new Date(0)
-// })
-res.clearCookie("token", { path: "/", sameSite: "none", secure: true ,httpOnly:true});
-const cookies = res.get("Set-Cookie"); // Get the "Set-Cookie" headers
+authRouter.post("/logout", async (req: Request, res: Response) => {
+  // res.cookie("token","",{
+  //   httpOnly:true,
+  //   sameSite:"none",
+  //   secure:false,
+  //   path:"/",
+  //   expires:new Date(0)
+  // })
+  res.clearCookie("token", {
+    path: "/",
+    sameSite: "none",
+    secure: true,
+    httpOnly: true,
+  });
+  const cookies = res.get("Set-Cookie"); // Get the "Set-Cookie" headers
   console.log("Response Cookies:", cookies);
-
 
   // redirect to login or register page
   res.send("user logged out successfully");

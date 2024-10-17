@@ -67,9 +67,9 @@ const userSchema = new mongoose.Schema<IUser>(
     },
     gender: {
       type: String,
-      default:"",
+      default: "",
       enum: {
-        values: ["M", "F", "O",""],
+        values: ["M", "F", "O", ""],
         message: "{VALUE} is not a gender",
       },
     },
@@ -84,7 +84,6 @@ const userSchema = new mongoose.Schema<IUser>(
       },
     },
     about: {
-      default:"",
       type: String,
     },
     skills: {
@@ -94,6 +93,14 @@ const userSchema = new mongoose.Schema<IUser>(
   { timestamps: true }
 );
 
+// Pre-save hook to generat the about us for new users
+userSchema.pre("save", async function (next) {
+  const user = this as IUser;
+  if (!user.about) {
+    user.about = `Hi guys I'm ${user.firstName} nice to meet you.`;
+  }
+  next();
+});
 // Custom method to generate JWT
 userSchema.methods.getJWT = function () {
   const user = this as IUser;
