@@ -1,6 +1,6 @@
 import { faCheck, faGenderless, faMars, faTimes, faVenus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+
 // wihthout the functions
 export interface ProfileCardProps {
   _id: string;
