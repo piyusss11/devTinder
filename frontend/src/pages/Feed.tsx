@@ -81,7 +81,7 @@ const Feed: React.FC = () => {
             {/* Gradient Fade & Text */}
             <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent">
               <div className="absolute bottom-0 p-4 text-left">
-                <h2 className="text-xl font-semibold text-[#F58F7C] gap-1 flex items-center justify-center">
+                <h2 className="text-xl font-semibold text-[#F58F7C] gap-1 flex items-center ">
                   {profile.userName} {profile.gender === "M" ? (
                     <FontAwesomeIcon icon={faMars} className="text-blue-500" />
                   ) : profile.gender === "F" ? (
@@ -94,7 +94,7 @@ const Feed: React.FC = () => {
                   )}
                 </h2>
                 <h1>{profile.age}</h1>
-                <p className="mt-1 text-[#D6D6D6] overflow-hidden h-12 ">
+                <p className="mt-1 text-[#D6D6D6] overflow-hidden max-h-12 ">
                   {profile.about}
                 </p>
               </div>

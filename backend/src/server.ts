@@ -6,7 +6,9 @@ import profileRouter from "./routes/profile";
 import authRouter from "./routes/auth";
 import requestRouter from "./routes/request";
 import userRouter from "./routes/user";
+
 import cors from "cors";
+import dbUpdateRouter from "./routes/updateDb";
 const app = express();
 
 app.use(
@@ -23,6 +25,7 @@ app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/", userRouter);
+app.use("/", dbUpdateRouter);
 
 const port = 3000;
 connectDB()
