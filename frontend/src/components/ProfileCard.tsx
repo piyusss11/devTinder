@@ -1,4 +1,4 @@
-import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faGenderless, faMars, faTimes, faVenus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 // wihthout the functions
@@ -12,7 +12,7 @@ export interface ProfileCardProps {
   age?: number;
   skills?: string[];
 }
-const ProfileCard = ({ _id, userName, photoUrl, about }: ProfileCardProps) => {
+const ProfileCard = ({ _id, userName, photoUrl, about,age,gender }: ProfileCardProps) => {
   return (
     <div
       key={_id}
@@ -30,8 +30,18 @@ const ProfileCard = ({ _id, userName, photoUrl, about }: ProfileCardProps) => {
       {/* Gradient Fade & Text */}
       <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent ">
         <div className="absolute bottom-0 p-4 text-left mb-2">
-          <h2 className="text-xl font-semibold text-[#F58F7C]">{userName}</h2>
-          <p className="mt-1 text-[#D6D6D6] max-h-6">{about}</p>
+          <h2 className="text-xl font-semibold text-[#F58F7C]">{userName} {gender === "M" ? (
+                    <FontAwesomeIcon icon={faMars} className="text-blue-500" />
+                  ) : gender === "F" ? (
+                    <FontAwesomeIcon icon={faVenus} className="text-pink-500" />
+                  ) : (
+                    <FontAwesomeIcon
+                      icon={faGenderless}
+                      className="text-gray-500"
+                    />
+                  )}</h2>
+          <h1 className="text-white">{age}</h1>
+          <p className="mt-1 text-[#D6D6D6] max-h-7 ">{about}</p>
         </div>
       </div>
 
