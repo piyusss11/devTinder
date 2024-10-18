@@ -7,7 +7,7 @@ import { Local_Url } from "../utils/constants";
 import { useToast } from "@/hooks/use-toast";
 import MainNavBar from "../components/MainNavBar";
 import ProfileCard from "../components/ProfileCard";
-import SkeletonPage from "@/components/SkeletonPage";
+
 
 const EditProfile: React.FC = () => {
   const user = useSelector((state: RootState) => state.user);
@@ -278,7 +278,6 @@ const EditProfile: React.FC = () => {
             </div>
           </form>
 
-          <SkeletonPage />
         </div>
         {/* Right Column: Profile Card */}
         <div className="w-full md:w-1/2 flex  justify-center">

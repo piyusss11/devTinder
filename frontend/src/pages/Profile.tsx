@@ -1,8 +1,8 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../utils/appStore";
-import MainNavBar from "../components/MainNavBar";
 import { Link } from "react-router-dom";
+import MainNavBar from "../components/MainNavBar";
 
 const Profile: React.FC = () => {
   // Access the user info from Redux state

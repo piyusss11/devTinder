@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import BackGroundImage from "../assets/BgImg.jpg";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
+import BackGroundImage from "../assets/BgImg.jpg";
 
 const Signup: React.FC = () => {
   const [firstName, setFirstName] = useState("");

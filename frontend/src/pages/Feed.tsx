@@ -12,9 +12,9 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../utils/appStore";
 import { addFeed } from "../utils/feedSlice";
+import { useToast } from "@/hooks/use-toast";
 import MainNavBar from "../components/MainNavBar";
 import SkeletonPage from "@/components/SkeletonPage";
-import { useToast } from "@/hooks/use-toast";
 
 const Feed: React.FC = () => {
   const dispatch = useDispatch();
