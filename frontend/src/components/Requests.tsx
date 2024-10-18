@@ -4,12 +4,14 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../utils/appStore";
 import { addRequests } from "../utils/requestSlice";
-import { toast } from "react-toastify";
+
 import RequestCards from "./RequestCards";
+import { useToast } from "@/hooks/use-toast";
 
 const Requests = () => {
   const requests = useSelector((store: RootState) => store.requests);
   const dispatch = useDispatch();
+  const { toast } = useToast();
 
   const reviewRequest = async (status: string, id: string) => {
     try {
@@ -19,13 +21,13 @@ const Requests = () => {
         { withCredentials: true }
       );
       if (status === "accepted") {
-        toast.success("Request accepted successfully");
+        toast({ description: "Request accepted successfully" });
       }
       if (status === "rejected") {
-        toast.error("Request rejected successfully");
+        toast({ description: "Request rejected successfully" });
       }
     } catch (error) {
-      toast.error("Cant review request");
+      toast({ description: "Cant review request" });
       console.log(error);
     }
   };
@@ -45,12 +47,12 @@ const Requests = () => {
   }, []);
   return (
     <div className="p-6 bg-[#3A3A3F] rounded-lg justify-center flex gap-4 flex-wrap">
-     {requests.length > 0 ? (
+      {requests.length > 0 ? (
         requests.map((request) => (
           <RequestCards
-            key={request._id} 
+            key={request._id}
             _id={request._id}
-            profile={request.fromUserId} 
+            profile={request.fromUserId}
             handleReq={reviewRequest}
           />
         ))

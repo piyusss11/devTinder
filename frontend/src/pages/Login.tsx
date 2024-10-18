@@ -1,21 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import BackGroundImage from "../assets/BgImg.jpg";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
-import { toast, ToastContainer } from "react-toastify";
 import { Local_Url } from "../utils/constants";
-import { RootState } from "../utils/appStore";
+import { useToast } from "@/hooks/use-toast";
+import BackGroundImage from "../assets/BgImg.jpg";
 
 const Login: React.FC = () => {
   const [emailId, setEmailId] = useState("yash@gmail.com");
   const [password, setPassword] = useState("Yash@123");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const userData = useSelector((state: RootState) => state.user);
-  
-
+  const { toast } = useToast();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent page refresh
@@ -30,11 +27,11 @@ const Login: React.FC = () => {
       );
       // console.log(response.data);
       dispatch(addUser(response.data));
-      // toast.success("Login successful!");
+      toast({ title: "Login successful", description: response.data.message });
       navigate("/");
     } catch (error) {
-      toast.error("Login failed: Invalid email or password");
-      console.error("Login failed:", error); // Show error to the user
+      toast({ title: "Login failed", description: "Invalid credentials",variant: "destructive" });
+      // console.error("Login failed:", error); // Show error to the user
     }
   };
 
@@ -97,7 +94,7 @@ const Login: React.FC = () => {
             </Link>
           </div>
         </form>
-        <ToastContainer />
+    
       </div>
     </div>
   );

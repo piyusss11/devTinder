@@ -7,24 +7,23 @@ import { RootState } from "../utils/appStore";
 import logo from "../assets/logo.png";
 import { Local_Url } from "../utils/constants";
 import axios from "axios";
-import { toast, ToastContainer } from "react-toastify";
 import { removeUser } from "../utils/userSlice";
+import { useToast } from "@/hooks/use-toast";
 
 const MainNavBar: React.FC = () => {
   const user = useSelector((state: RootState) => state.user);
   const userImage = user.photoUrl || "https://your-default-image-url.com";
   const dispatch = useDispatch();
+  const {toast} = useToast()
   // console.log(document.cookie)
   const logout = async () => {
     try {
       await axios.post(`${Local_Url}/logout`, {}, { withCredentials: true });
       // console.log(response.headers.get("Set-Cookie"));
-      toast.success("Logout Successful");
+      toast({description: "Logout successful",})
       dispatch(removeUser());
-      // setTimeout(() => {
-      //   window.location.reload();  // This reloads the current page
-      // }, 1500);
     } catch (error) {
+      toast({description: "Logout failed, Try again",})
       console.log(error);
     }
   };
@@ -113,7 +112,6 @@ const MainNavBar: React.FC = () => {
           </div>
         </div>
       </div>
-      <ToastContainer />
     </nav>
   );
 };

@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";
 import { RootState } from "../utils/appStore";
 import { Local_Url } from "../utils/constants";
+import { useToast } from "@/hooks/use-toast";
 import MainNavBar from "../components/MainNavBar";
 import ProfileCard from "../components/ProfileCard";
+import SkeletonPage from "@/components/SkeletonPage";
 
 const EditProfile: React.FC = () => {
   const user = useSelector((state: RootState) => state.user);
@@ -15,16 +15,14 @@ const EditProfile: React.FC = () => {
   const [lastName, setLastName] = useState(user.lastName);
   const [userName, setUserName] = useState(user.userName);
   const [age, setAge] = useState<number | undefined>(user.age);
-  const [gender, setGender] = useState<"M" | "F" | "O" | "">("");
+  const [gender, setGender] = useState<"M" | "F" | "O" | "">("M");
   const [photoUrl, setPhotoUrl] = useState(user.photoUrl);
   const [about, setAbout] = useState(user.about);
   const [skills, setSkills] = useState<string[]>(user.skills);
   const [newSkill, setNewSkill] = useState("");
 
   const navigate = useNavigate();
-
-  // Load profile data (assumed user is already logged in)
-  useEffect(() => {}, []);
+  const { toast } = useToast();
 
   const handleProfileUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,15 +42,7 @@ const EditProfile: React.FC = () => {
         { withCredentials: true }
       );
 
-      toast.success("Profile updated successfully!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      toast({ description: "Profile updated successfully." });
 
       setTimeout(() => {
         navigate("/"); // Redirect to profile view page
@@ -60,7 +50,7 @@ const EditProfile: React.FC = () => {
       }, 3000);
     } catch (error) {
       console.error("Profile update failed:", error);
-      toast.error("Profile update failed. Please try again.");
+      toast({ description: "Profile update failed. Please try again.",variant: "destructive" });
     }
   };
 
@@ -70,14 +60,9 @@ const EditProfile: React.FC = () => {
         setSkills([...skills, newSkill]);
         setNewSkill("");
       } else {
-        toast.error("You can only add up to 10 skills.", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
+        toast({
+          description: "You can only add up to 10 skills.",
+
         });
       }
     }
@@ -292,9 +277,9 @@ const EditProfile: React.FC = () => {
               </button>
             </div>
           </form>
-          <ToastContainer />
-        </div>
 
+          <SkeletonPage />
+        </div>
         {/* Right Column: Profile Card */}
         <div className="w-full md:w-1/2 flex  justify-center">
           <ProfileCard

@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import BackGroundImage from "../assets/BgImg.jpg";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"; // Import toast styles
+import { useToast } from "@/hooks/use-toast";
 
 const Signup: React.FC = () => {
   const [firstName, setFirstName] = useState("");
@@ -15,6 +14,7 @@ const Signup: React.FC = () => {
   const [age, setAge] = useState(0);
   const [gender, setGender] = useState("");
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,24 +32,20 @@ const Signup: React.FC = () => {
 
       console.log(response.data);
 
-      // Trigger toast notification
-      toast.success("User created successfully! Redirecting to login...", {
-        position: "top-right",
-        autoClose: 3000, // auto close after 3 seconds
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
+
+      toast({
+        description: "User created successfully! Redirecting to login...",
       });
 
-      // Navigate after the toast notification
       setTimeout(() => {
         navigate("/login");
       }, 3000); // Wait for 3 seconds before navigating
     } catch (error) {
       console.error("Signup failed:", error);
-      toast.error("Signup failed! Please try again.");
+      toast({
+        description: "Signup failed! Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -220,9 +216,6 @@ const Signup: React.FC = () => {
             </Link>
           </div>
         </form>
-
-        {/* Toast container to show notifications */}
-        <ToastContainer />
       </div>
     </div>
   );

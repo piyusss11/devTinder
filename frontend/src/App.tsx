@@ -1,20 +1,18 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "./utils/appStore";
+import { Local_Url } from "./utils/constants";
+import { useEffect } from "react";
+import { addUser } from "./utils/userSlice";
+import { Toaster } from "./components/ui/toaster";
 import Body from "./pages/Body";
 import Login from "./pages/Login";
 import Signup from "./pages/SignUp";
 import Feed from "./pages/Feed";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "./utils/appStore";
 import EditProfile from "./pages/EditProfile";
-import FeedPage from "./pages/FeedPage";
-
-// Layouts
 import MainLayout from "./components/Layout/MainLayout";
 import PublicLayout from "./components/Layout/PublicLayout";
 import axios from "axios";
-import { Local_Url } from "./utils/constants";
-import { useEffect } from "react";
-import { addUser } from "./utils/userSlice";
 import Profile from "./pages/Profile";
 import TogglePage from "./pages/TogglePage";
 
@@ -54,6 +52,7 @@ function App() {
 
   return (
     <BrowserRouter basename="/">
+<Toaster/>
       <Routes>
         {/* Authenticated routes */}
         {isUserPresent ? (
@@ -61,7 +60,6 @@ function App() {
             <Route index element={<Feed />} />
             <Route path="profile" element={<Profile />} />
             <Route path="profile/edit" element={<EditProfile />} />
-            <Route path="feedPage" element={<FeedPage />} />
             <Route path="connections" element={<TogglePage />} />
             <Route path={"login"} element={<Navigate to="/" replace />} />
             <Route path={"signup"} element={<Navigate to="/" replace />} />
@@ -81,6 +79,8 @@ function App() {
         )}
       </Routes>
     </BrowserRouter>
+
+
   );
 }
 
