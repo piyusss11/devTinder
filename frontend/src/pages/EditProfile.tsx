@@ -7,7 +7,7 @@ import { Local_Url } from "../utils/constants";
 import { useToast } from "@/hooks/use-toast";
 import MainNavBar from "../components/MainNavBar";
 import ProfileCard from "../components/ProfileCard";
-
+import ChangePasswordPopUp from "@/components/ChangePasswordPopUp";
 
 const EditProfile: React.FC = () => {
   const user = useSelector((state: RootState) => state.user);
@@ -50,7 +50,10 @@ const EditProfile: React.FC = () => {
       }, 3000);
     } catch (error) {
       console.error("Profile update failed:", error);
-      toast({ description: "Profile update failed. Please try again.",variant: "destructive" });
+      toast({
+        description: "Profile update failed. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -62,7 +65,6 @@ const EditProfile: React.FC = () => {
       } else {
         toast({
           description: "You can only add up to 10 skills.",
-
         });
       }
     }
@@ -72,9 +74,6 @@ const EditProfile: React.FC = () => {
     setSkills(skills.filter((s) => s !== skill));
   };
 
-  const handlePasswordChange = () => {
-    navigate("/change-password"); // Redirect to change password page
-  };
 
   return (
     <div className="min-h-screen flex flex-col bg-[#1F1E24]">
@@ -268,16 +267,10 @@ const EditProfile: React.FC = () => {
               >
                 Update Profile
               </button>
-              <button
-                type="button"
-                className="px-6 py-2 bg-gray-500 text-white font-semibold rounded-lg"
-                onClick={handlePasswordChange}
-              >
-                Change Password
-              </button>
+
+              <ChangePasswordPopUp />
             </div>
           </form>
-
         </div>
         {/* Right Column: Profile Card */}
         <div className="w-full md:w-1/2 flex  justify-center">
