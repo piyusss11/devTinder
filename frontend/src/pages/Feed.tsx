@@ -24,7 +24,7 @@ const Feed: React.FC = () => {
   const getFeed = async () => {
     if (feed.length > 0) return;
     try {
-      const feed = await axios.get(`${Local_Url}/user/feed?page=1&limit=20`, {
+      const feed = await axios.get(`${Local_Url}/user/feed?page=1&limit=40`, {
         withCredentials: true,
       });
 
@@ -57,7 +57,7 @@ const Feed: React.FC = () => {
 
   useEffect(() => {
     getFeed();
-  }, []);
+  }, [handleReq]);
   return (
     <div className="min-h-screen bg-[#2C2B30] text-[#D6D6D6]">
       {/* Navbar */}

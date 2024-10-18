@@ -30,7 +30,7 @@ const MainNavBar: React.FC = () => {
 
   return (
     <nav className="relative bg-[#F58F7C]">
-      <div className="container mx-auto flex justify-between items-center p-4">
+      <div className="container mx-auto flex justify-between items-center py-2 px-10">
         {/* Brand Logo or Home Link */}
 
         <Link to="/">
