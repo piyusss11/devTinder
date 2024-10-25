@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheck,
@@ -19,22 +19,25 @@ import SkeletonPage from "@/components/SkeletonPage";
 const Feed: React.FC = () => {
   const dispatch = useDispatch();
   const feed = useSelector((state: RootState) => state.feed);
-  // console.log(document.cookie)
   const { toast } = useToast();
+  
+  // State to track refresh
+  const [refreshFeed, setRefreshFeed] = useState(false);
+
   const getFeed = async () => {
-    if (feed.length > 0) return;
+    if (feed.length > 0 && !refreshFeed) return; 
     try {
-      const feed = await axios.get(`${Local_Url}/user/feed?page=1&limit=40`, {
+      const feedResponse = await axios.get(`${Local_Url}/user/feed?page=1&limit=40`, {
         withCredentials: true,
       });
 
-      dispatch(addFeed(feed.data.data));
-
-      // console.log(feed);
+      dispatch(addFeed(feedResponse.data.data));
+      setRefreshFeed(false); 
     } catch (error) {
       console.log(error);
     }
   };
+
   const handleReq = async (statusOfReq: string, id: string) => {
     try {
       await axios.post(
@@ -46,18 +49,21 @@ const Feed: React.FC = () => {
         toast({ description: "Request sent successfully" });
       }
       if (statusOfReq === "uninterested") {
-        toast({ description: "User Rejected succesfully" });
+        toast({ description: "User Rejected successfully" });
       }
-    } catch (error) {
-      toast({ description: "Cant send",title:"Error" ,variant: "destructive" });
 
+     
+      setRefreshFeed(true);
+    } catch (error) {
+      toast({ description: "Can't send request", title: "Error", variant: "destructive" });
       console.log(error);
     }
   };
 
   useEffect(() => {
     getFeed();
-  }, [handleReq]);
+  }, [refreshFeed]); 
+
   return (
     <div className="min-h-screen bg-[#2C2B30] text-[#D6D6D6]">
       {/* Navbar */}
@@ -73,7 +79,7 @@ const Feed: React.FC = () => {
               key={profile._id}
               className="relative group rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 ease-in-out h-[300px] w-full" // Fixed height for uniformity
             >
-              {/* Full Image Background with Centering */}
+            
               <div className="h-full w-full flex items-center justify-center">
                 <img
                   src={profile.photoUrl}
@@ -111,7 +117,7 @@ const Feed: React.FC = () => {
                 </div>
               </div>
 
-              {/* Hover Icons */}
+            
               <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
                 <div className="flex space-x-6">
                   <FontAwesomeIcon

@@ -14,7 +14,7 @@ const ConnectionCards = ({
   skills,
 }: ProfileCardProps) => {
   return (
-    <div className="relative group bg-[#3A3A3F] shadow-lg rounded-lg overflow-hidden duration-200 ease-in-out hover:shadow-2xl hover:scale-105 transition-transform w-[454px] h-[488px] mb-6 flex flex-col">
+    <div className="relative group bg-[#3A3A3F] shadow-lg rounded-lg overflow-hidden duration-200 ease-in-out hover:shadow-2xl hover:scale-105 transition-transform w-[454px] h-[512px] mb-6 flex flex-col">
       {/* Profile Image on top */}
       <div className="relative w-full h-[300px]">
         <img
@@ -47,9 +47,9 @@ const ConnectionCards = ({
 
           {/* Skills Section */}
           {skills && skills.length > 0 && (
-            <div className="mt-4 overflow-hidden h-16 ">
+            <div className="mt-4 overflow-hidden ">
               <h4 className="text-[#F58F7C] font-semibold">Skills:</h4>
-              <div className="flex flex-wrap space-x-2 mt-2 ">
+              <div className="flex flex-wrap gap-2 mt-2 ">
                 {skills.map((skill) => (
                   <span
                     key={skill}

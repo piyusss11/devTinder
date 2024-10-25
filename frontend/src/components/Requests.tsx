@@ -26,6 +26,7 @@ const Requests = () => {
       if (status === "rejected") {
         toast({ description: "Request rejected successfully" });
       }
+      getRequests()
     } catch (error) {
       toast({ description: "Cant review request" });
       console.log(error);
