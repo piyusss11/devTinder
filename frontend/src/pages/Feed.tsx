@@ -15,24 +15,28 @@ import { addFeed } from "../utils/feedSlice";
 import { useToast } from "@/hooks/use-toast";
 import MainNavBar from "../components/MainNavBar";
 import SkeletonPage from "@/components/SkeletonPage";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import ViewProfilePopUp from "@/components/ViewProfilePopUp";
 
 const Feed: React.FC = () => {
   const dispatch = useDispatch();
   const feed = useSelector((state: RootState) => state.feed);
   const { toast } = useToast();
-  
+
   // State to track refresh
   const [refreshFeed, setRefreshFeed] = useState(false);
 
   const getFeed = async () => {
-    if (feed.length > 0 && !refreshFeed) return; 
+    if (feed.length > 0 && !refreshFeed) return;
     try {
-      const feedResponse = await axios.get(`${Local_Url}/user/feed?page=1&limit=40`, {
-        withCredentials: true,
-      });
-
+      const feedResponse = await axios.get(
+        `${Local_Url}/user/feed?page=1&limit=40`,
+        {
+          withCredentials: true,
+        }
+      );
       dispatch(addFeed(feedResponse.data.data));
-      setRefreshFeed(false); 
+      setRefreshFeed(false);
     } catch (error) {
       console.log(error);
     }
@@ -51,18 +55,20 @@ const Feed: React.FC = () => {
       if (statusOfReq === "uninterested") {
         toast({ description: "User Rejected successfully" });
       }
-
-     
       setRefreshFeed(true);
     } catch (error) {
-      toast({ description: "Can't send request", title: "Error", variant: "destructive" });
+      toast({
+        description: "Can't send request",
+        title: "Error",
+        variant: "destructive",
+      });
       console.log(error);
     }
   };
 
   useEffect(() => {
     getFeed();
-  }, [refreshFeed]); 
+  }, [refreshFeed]);
 
   return (
     <div className="min-h-screen bg-[#2C2B30] text-[#D6D6D6]">
@@ -75,64 +81,67 @@ const Feed: React.FC = () => {
       ) : (
         <div className="p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {feed.map((profile) => (
-            <div
-              key={profile._id}
-              className="relative group rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 ease-in-out h-[300px] w-full" // Fixed height for uniformity
-            >
-            
-              <div className="h-full w-full flex items-center justify-center">
-                <img
-                  src={profile.photoUrl}
-                  alt={profile.userName}
-                  className="h-full w-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
-                />
-              </div>
+            <Dialog key={profile._id}>
+              <DialogTrigger>
+                <div
+                  
+                  className="relative group rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 ease-in-out h-[300px] w-full" // Fixed height for uniformity
+                >
+                  <div className="h-full w-full flex items-center justify-center">
+                    <img
+                      src={profile.photoUrl}
+                      alt={profile.userName}
+                      className="h-full w-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
+                    />
+                  </div>
 
-              {/* Gradient Fade & Text */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent">
-                <div className="absolute bottom-0 p-4 text-left">
-                  <h2 className="text-xl font-semibold text-[#F58F7C] gap-1 flex items-center ">
-                    {profile.userName}{" "}
-                    {profile.gender === "M" ? (
-                      <FontAwesomeIcon
-                        icon={faMars}
-                        className="text-blue-500"
-                      />
-                    ) : profile.gender === "F" ? (
-                      <FontAwesomeIcon
-                        icon={faVenus}
-                        className="text-pink-500"
-                      />
-                    ) : (
-                      <FontAwesomeIcon
-                        icon={faGenderless}
-                        className="text-gray-500"
-                      />
-                    )}
-                  </h2>
-                  <h1>{profile.age}</h1>
-                  <p className="mt-1 text-[#D6D6D6] overflow-hidden max-h-12 ">
-                    {profile.about}
-                  </p>
-                </div>
-              </div>
+                  {/* Gradient Fade & Text */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent">
+                    <div className="absolute bottom-0 p-4 text-left">
+                      <h2 className="text-xl font-semibold text-[#F58F7C] gap-1 flex items-center ">
+                        {profile.userName}{" "}
+                        {profile.gender === "M" ? (
+                          <FontAwesomeIcon
+                            icon={faMars}
+                            className="text-blue-500"
+                          />
+                        ) : profile.gender === "F" ? (
+                          <FontAwesomeIcon
+                            icon={faVenus}
+                            className="text-pink-500"
+                          />
+                        ) : (
+                          <FontAwesomeIcon
+                            icon={faGenderless}
+                            className="text-gray-500"
+                          />
+                        )}
+                      </h2>
+                      <h1>{profile.age}</h1>
+                      <p className="mt-1 text-[#D6D6D6] overflow-hidden max-h-12 ">
+                        {profile.about}
+                      </p>
+                    </div>
+                  </div>
 
-            
-              <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
-                <div className="flex space-x-6">
-                  <FontAwesomeIcon
-                    onClick={() => handleReq("interested", profile._id)}
-                    icon={faCheck}
-                    className="text-4xl text-[#F58F7C] hover:scale-110 transition-transform duration-200 ease-in-out cursor-pointer"
-                  />
-                  <FontAwesomeIcon
-                    onClick={() => handleReq("uninterested", profile._id)}
-                    icon={faTimes}
-                    className="text-4xl text-[#F2C4CE] hover:scale-110 transition-transform duration-200 ease-in-out cursor-pointer"
-                  />
+                  <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
+                    <div className="flex space-x-6">
+                      <FontAwesomeIcon
+                        onClick={() => handleReq("interested", profile._id)}
+                        icon={faCheck}
+                        className="text-4xl text-[#F58F7C] hover:scale-110 transition-transform duration-200 ease-in-out cursor-pointer"
+                      />
+                      <FontAwesomeIcon
+                        onClick={() => handleReq("uninterested", profile._id)}
+                        icon={faTimes}
+                        className="text-4xl text-[#F2C4CE] hover:scale-110 transition-transform duration-200 ease-in-out cursor-pointer"
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+                <ViewProfilePopUp info={profile} onInterested={() => handleReq("interested", profile._id)} onUnInterested={() => handleReq("uninterested", profile._id)} />
+              </DialogTrigger>
+            </Dialog>
           ))}
         </div>
       )}
