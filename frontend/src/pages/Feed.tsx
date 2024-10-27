@@ -17,6 +17,7 @@ import MainNavBar from "../components/MainNavBar";
 import SkeletonPage from "@/components/SkeletonPage";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import ViewProfilePopUp from "@/components/ViewProfilePopUp";
+import PaginationForFeed from "@/components/PaginationForFeed";
 
 const Feed: React.FC = () => {
   const dispatch = useDispatch();
@@ -25,12 +26,16 @@ const Feed: React.FC = () => {
 
   // State to track refresh
   const [refreshFeed, setRefreshFeed] = useState(false);
+  const [page, setPage] = useState(1);
+  const limit = 6
 
+  const handleNextPage =()=>setPage((prev)=> prev+1)
+  const handlePreviousPage = ()=>setPage((prev)=>Math.max(prev-1,1)) // so pages dont go below 1 
   const getFeed = async () => {
-    if (feed.length > 0 && !refreshFeed) return;
+    // if (feed.length > 0 && !refreshFeed) return;
     try {
       const feedResponse = await axios.get(
-        `${Local_Url}/user/feed?page=1&limit=40`,
+        `${Local_Url}/user/feed?page=${page}&limit=${limit}`,
         {
           withCredentials: true,
         }
@@ -68,7 +73,7 @@ const Feed: React.FC = () => {
 
   useEffect(() => {
     getFeed();
-  }, [refreshFeed]);
+  }, [page,refreshFeed]);
 
   return (
     <div className="min-h-screen bg-[#2C2B30] text-[#D6D6D6]">
@@ -145,6 +150,7 @@ const Feed: React.FC = () => {
           ))}
         </div>
       )}
+      <PaginationForFeed page={page} onNext={handleNextPage} onPrevious={handlePreviousPage}/>
     </div>
   );
 };
