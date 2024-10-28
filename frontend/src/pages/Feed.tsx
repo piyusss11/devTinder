@@ -18,6 +18,7 @@ import SkeletonPage from "@/components/SkeletonPage";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import ViewProfilePopUp from "@/components/ViewProfilePopUp";
 import PaginationForFeed from "@/components/PaginationForFeed";
+import { FiltersDialog } from "@/components/FiltersDialog";
 
 const Feed: React.FC = () => {
   const dispatch = useDispatch();
@@ -25,17 +26,36 @@ const Feed: React.FC = () => {
   const { toast } = useToast();
 
   // State to track refresh
-  const [refreshFeed, setRefreshFeed] = useState(false);
-  const [page, setPage] = useState(1);
-  const limit = 6
+  const [refreshFeed, setRefreshFeed] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(1);
+  const limit = 6;
+  const [gender, setGender] = useState<string>("");
+  const [skills, setSkills] = useState<string>("");
+  const [minAge, setMinAge] = useState<null | number>(null);
+  const [maxAge, setMaxAge] = useState<null | number>(null);
 
-  const handleNextPage =()=>setPage((prev)=> prev+1)
-  const handlePreviousPage = ()=>setPage((prev)=>Math.max(prev-1,1)) // so pages dont go below 1 
+  const handleNextPage = () => setPage((prev) => prev + 1);
+  const handlePreviousPage = () => setPage((prev) => Math.max(prev - 1, 1)); // so pages dont go below 1
+  const handleFilters = (
+    gender: string,
+    skills: string,
+    minAge: null | number,
+    maxAge: null | number
+  ) => {
+    setGender(gender);
+    setSkills(skills);
+    setMinAge(minAge);
+    setMaxAge(maxAge);
+    // console.log("gender:", gender);
+    // console.log("skills:", skills);
+    // console.log("minAge:", minAge);
+    // console.log("maxAge:", maxAge);
+  };
   const getFeed = async () => {
     // if (feed.length > 0 && !refreshFeed) return;
     try {
       const feedResponse = await axios.get(
-        `${Local_Url}/user/feed?page=${page}&limit=${limit}`,
+        `${Local_Url}/user/feed?page=${page}&limit=${limit}&gender=${gender}&skills=${skills}&minAge=${minAge}&maxAge=${maxAge}`,
         {
           withCredentials: true,
         }
@@ -73,7 +93,7 @@ const Feed: React.FC = () => {
 
   useEffect(() => {
     getFeed();
-  }, [page,refreshFeed]);
+  }, [page, refreshFeed, gender, skills, minAge, maxAge]);
 
   return (
     <div className="min-h-screen bg-[#2C2B30] text-[#D6D6D6]">
@@ -84,73 +104,86 @@ const Feed: React.FC = () => {
           <SkeletonPage />
         </div>
       ) : (
-        <div className="p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {feed.map((profile) => (
-            <Dialog key={profile._id}>
-              <DialogTrigger>
-                <div
-                  
-                  className="relative group rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 ease-in-out h-[300px] w-full" // Fixed height for uniformity
-                >
-                  <div className="h-full w-full flex items-center justify-center">
-                    <img
-                      src={profile.photoUrl}
-                      alt={profile.userName}
-                      className="h-full w-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
-                    />
-                  </div>
-
-                  {/* Gradient Fade & Text */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent">
-                    <div className="absolute bottom-0 p-4 text-left">
-                      <h2 className="text-xl font-semibold text-[#F58F7C] gap-1 flex items-center ">
-                        {profile.userName}{" "}
-                        {profile.gender === "M" ? (
-                          <FontAwesomeIcon
-                            icon={faMars}
-                            className="text-blue-500"
-                          />
-                        ) : profile.gender === "F" ? (
-                          <FontAwesomeIcon
-                            icon={faVenus}
-                            className="text-pink-500"
-                          />
-                        ) : (
-                          <FontAwesomeIcon
-                            icon={faGenderless}
-                            className="text-gray-500"
-                          />
-                        )}
-                      </h2>
-                      <h1>{profile.age}</h1>
-                      <p className="mt-1 text-[#D6D6D6] overflow-hidden max-h-12 ">
-                        {profile.about}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
-                    <div className="flex space-x-6">
-                      <FontAwesomeIcon
-                        onClick={() => handleReq("interested", profile._id)}
-                        icon={faCheck}
-                        className="text-4xl text-[#F58F7C] hover:scale-110 transition-transform duration-200 ease-in-out cursor-pointer"
-                      />
-                      <FontAwesomeIcon
-                        onClick={() => handleReq("uninterested", profile._id)}
-                        icon={faTimes}
-                        className="text-4xl text-[#F2C4CE] hover:scale-110 transition-transform duration-200 ease-in-out cursor-pointer"
+        <div>
+          {/* for filters */}
+          <FiltersDialog onFilters={handleFilters} />
+          <div className="p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {feed.map((profile) => (
+              <Dialog key={profile._id}>
+                <DialogTrigger>
+                  <div
+                    className="relative group rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 ease-in-out h-[300px] w-full" // Fixed height for uniformity
+                  >
+                    <div className="h-full w-full flex items-center justify-center">
+                      <img
+                        src={profile.photoUrl}
+                        alt={profile.userName}
+                        className="h-full w-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
                       />
                     </div>
+
+                    {/* Gradient Fade & Text */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent">
+                      <div className="absolute bottom-0 p-4 text-left">
+                        <h2 className="text-xl font-semibold text-[#F58F7C] gap-1 flex items-center ">
+                          {profile.userName}{" "}
+                          {profile.gender === "M" ? (
+                            <FontAwesomeIcon
+                              icon={faMars}
+                              className="text-blue-500"
+                            />
+                          ) : profile.gender === "F" ? (
+                            <FontAwesomeIcon
+                              icon={faVenus}
+                              className="text-pink-500"
+                            />
+                          ) : (
+                            <FontAwesomeIcon
+                              icon={faGenderless}
+                              className="text-gray-500"
+                            />
+                          )}
+                        </h2>
+                        <h1>{profile.age}</h1>
+                        <p className="mt-1 text-[#D6D6D6] overflow-hidden max-h-12 ">
+                          {profile.about}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
+                      <div className="flex space-x-6">
+                        <FontAwesomeIcon
+                          onClick={() => handleReq("interested", profile._id)}
+                          icon={faCheck}
+                          className="text-4xl text-[#F58F7C] hover:scale-110 transition-transform duration-200 ease-in-out cursor-pointer"
+                        />
+                        <FontAwesomeIcon
+                          onClick={() => handleReq("uninterested", profile._id)}
+                          icon={faTimes}
+                          className="text-4xl text-[#F2C4CE] hover:scale-110 transition-transform duration-200 ease-in-out cursor-pointer"
+                        />
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <ViewProfilePopUp info={profile} onInterested={() => handleReq("interested", profile._id)} onUnInterested={() => handleReq("uninterested", profile._id)} />
-              </DialogTrigger>
-            </Dialog>
-          ))}
+                  <ViewProfilePopUp
+                    info={profile}
+                    onInterested={() => handleReq("interested", profile._id)}
+                    onUnInterested={() =>
+                      handleReq("uninterested", profile._id)
+                    }
+                  />
+                </DialogTrigger>
+              </Dialog>
+            ))}
+          </div>
         </div>
       )}
-      <PaginationForFeed page={page} onNext={handleNextPage} onPrevious={handlePreviousPage}/>
+      <PaginationForFeed
+        page={page}
+        onNext={handleNextPage}
+        onPrevious={handlePreviousPage}
+      />
     </div>
   );
 };

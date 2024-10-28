@@ -4,10 +4,16 @@ const arr: number[] = [1, 2, 3, 4, 5, 6];
 
 const SkeletonPage = () => {
   return (
-    <div className="flex gap-4 flex-wrap">
-      {arr.map((data, index) => (
-        <SkeletonCard key={index} />
-      ))}
+    <div>
+      <h1 className="text-4xl text-center font-bold text-[#F58F7C] mb-4">
+        {" "}
+        No Users found
+      </h1>
+      <div className="flex gap-4 flex-wrap">
+        {arr.map((data, index) => (
+          <SkeletonCard key={index} />
+        ))}
+      </div>
     </div>
   );
 };

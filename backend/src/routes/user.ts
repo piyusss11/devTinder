@@ -86,6 +86,14 @@ userRouter.get("/user/feed", userAuth, async (req: Request, res: Response) => {
     limit = limit > 50 ? 50 : limit;
     const skip = (page - 1) * limit;
 
+    // getting filters from url query
+    const gender = req.query.gender as string;
+    const skills = req.query.skills
+      ? (req.query.skills as string).split(",")
+      : [];
+    const minAge = parseInt(req.query.minAge as string);
+    const maxAge = parseInt(req.query.maxAge as string);
+
     const requests = await ConnectionRequest.find({
       $or: [{ toUserId: loggedInUser._id }, { fromUserId: loggedInUser._id }],
     }).select("toUserId fromUserId");
@@ -95,19 +103,35 @@ userRouter.get("/user/feed", userAuth, async (req: Request, res: Response) => {
       hiddenUsers.add(request.toUserId.toString());
       hiddenUsers.add(request.fromUserId.toString());
     });
-
-    const users = await User.find({
+    // $and is an array so we can push filters inside it for creating filter query
+    const filterCriteria: any = {
       $and: [
         { _id: { $nin: Array.from(hiddenUsers) } },
         { _id: { $ne: loggedInUser._id } },
       ],
-    })
+    };
+
+    if (gender) {
+      filterCriteria.$and.push({ gender });
+    }
+    if (skills.length > 0) {
+      // we all $all will check if all the skills are present in the array of the user
+      filterCriteria.$and.push({ skills: { $in: skills } });
+    }
+    if (!isNaN(minAge)) {
+      filterCriteria.$and.push({ age: { $gte: minAge } });
+    }
+    if (!isNaN(maxAge)) {
+      filterCriteria.$and.push({ age: { $lte: maxAge } });
+    }
+
+    const users = await User.find(filterCriteria)
       .select(safeDataToPass)
       .skip(skip)
       .limit(limit);
     // console.log(skip,req.query.page)
     // console.log(limit,req.query.limit)
-    
+
     res.json({ message: "user feed fetched successfully", data: users });
   } catch (error) {
     res.status(400).send(`error finding the users",${error}`);
