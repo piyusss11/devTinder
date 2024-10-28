@@ -122,7 +122,7 @@ export const FiltersDialog: React.FC<FiltersDialogProps> = ({ onFilters }) => {
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="ageRange" className="text-right col-span-4">
+              <Label htmlFor="ageRange" className="text-center col-span-4">
                 Age Range
               </Label>
               <div className="col-span-4">
