@@ -101,7 +101,7 @@ export const FiltersDialog: React.FC<FiltersDialogProps> = ({ onFilters }) => {
                 value={gender}
                 onChange={(e) => setGender(e.target.value)}
                 id="gender"
-                className="col-span-3"
+                className="col-span-3 outline-none"
               >
                 <option value="">Select Gender</option>
                 <option value="M">Male</option>
