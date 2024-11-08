@@ -7,7 +7,8 @@ import { Local_Url } from "../utils/constants";
 import { useToast } from "@/hooks/use-toast";
 import MainNavBar from "../components/MainNavBar";
 import ProfileCard from "../components/ProfileCard";
-import ChangePasswordPopUp from "@/components/ChangePasswordPopUp";
+import ChangePasswordPopUp from "../components/ChangePasswordPopUp";
+import { motion } from "framer-motion";
 
 const EditProfile: React.FC = () => {
   const user = useSelector((state: RootState) => state.user);
@@ -74,7 +75,6 @@ const EditProfile: React.FC = () => {
     setSkills(skills.filter((s) => s !== skill));
   };
 
-
   return (
     <div className="min-h-screen flex flex-col bg-[#1F1E24]">
       {/* Main NavBar */}
@@ -83,7 +83,12 @@ const EditProfile: React.FC = () => {
       {/* Page Content */}
       <div className="flex flex-col md:flex-row mt-10 max-w-7xl mx-auto w-full gap-10">
         {/* Left Column: Edit Profile Form */}
-        <div className="bg-[#3A3A3F] bg-opacity-90 p-10 rounded-lg shadow-2xl w-full md:w-1/2">
+        <motion.div
+          className="bg-[#3A3A3F] bg-opacity-90 p-10 rounded-lg shadow-2xl w-full md:w-1/2"
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           <h2 className="text-4xl font-bold text-[#F58F7C] mb-6">
             Edit Profile
           </h2>
@@ -91,105 +96,63 @@ const EditProfile: React.FC = () => {
             onSubmit={handleProfileUpdate}
             className="grid grid-cols-1 gap-6"
           >
+            {[
+              { label: "First Name", value: firstName, setValue: setFirstName, type: "text", id: "firstName" },
+              { label: "Last Name", value: lastName, setValue: setLastName, type: "text", id: "lastName" },
+              { label: "User Name", value: userName, setValue: setUserName, type: "text", id: "userName", required: true },
+              { label: "Age", value: age || "", setValue: setAge, type: "number", id: "age" },
+            ].map(({ label, value, setValue, type, id, required }) => (
+              <div key={id}>
+                <label className="block text-[#F2C4CE] font-semibold mb-2" htmlFor={id}>
+                  {label}
+                </label>
+                <motion.input
+                  className="w-full px-3 py-2 text-[#1F1E24] border border-[#F58F7C] rounded-lg focus:outline-none"
+                  type={type}
+                  id={id}
+                  value={value}
+                  onChange={(e) => setValue(type === 'number' ? Number(e.target.value) : e.target.value)}
+                  required={required}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                />
+              </div>
+            ))}
+            
             <div>
-              <label
-                className="block text-[#F2C4CE] font-semibold mb-2"
-                htmlFor="firstName"
-              >
-                First Name
-              </label>
-              <input
-                className="w-full px-3 py-2 text-[#1F1E24] border border-[#F58F7C] rounded-lg focus:outline-none"
-                type="text"
-                id="firstName"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                required
-              />
-            </div>
-
-            <div>
-              <label
-                className="block text-[#F2C4CE] font-semibold mb-2"
-                htmlFor="lastName"
-              >
-                Last Name
-              </label>
-              <input
-                className="w-full px-3 py-2 text-[#1F1E24] border border-[#F58F7C] rounded-lg focus:outline-none"
-                type="text"
-                id="lastName"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-              />
-            </div>
-
-            <div>
-              <label
-                className="block text-[#F2C4CE] font-semibold mb-2"
-                htmlFor="userName"
-              >
-                User Name
-              </label>
-              <input
-                className="w-full px-3 py-2 text-[#1F1E24] border border-[#F58F7C] rounded-lg focus:outline-none"
-                type="text"
-                id="userName"
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-                required
-              />
-            </div>
-
-            <div>
-              <label
-                className="block text-[#F2C4CE] font-semibold mb-2"
-                htmlFor="age"
-              >
-                Age
-              </label>
-              <input
-                className="w-full px-3 py-2 text-[#1F1E24] border border-[#F58F7C] rounded-lg focus:outline-none"
-                type="number"
-                id="age"
-                value={age || ""}
-                onChange={(e) => setAge(Number(e.target.value))}
-              />
-            </div>
-
-            <div>
-              <label
-                className="block text-[#F2C4CE] font-semibold mb-2"
-                htmlFor="gender"
-              >
+              <label className="block text-[#F2C4CE] font-semibold mb-2" htmlFor="gender">
                 Gender
               </label>
-              <select
+              <motion.select
                 className="w-full px-3 py-2 text-[#1F1E24] border border-[#F58F7C] rounded-lg focus:outline-none"
                 id="gender"
                 value={gender}
                 onChange={(e) => setGender(e.target.value as "M" | "F" | "O")}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
               >
                 <option value="">Select Gender</option>
                 <option value="M">Male</option>
                 <option value="F">Female</option>
                 <option value="O">Other</option>
-              </select>
+              </motion.select>
             </div>
 
             <div className="col-span-2">
-              <label
-                className="block text-[#F2C4CE] font-semibold mb-2"
-                htmlFor="photoUrl"
-              >
+              <label className="block text-[#F2C4CE] font-semibold mb-2" htmlFor="photoUrl">
                 Photo URL
               </label>
-              <input
+              <motion.input
                 className="w-full px-3 py-2 text-[#1F1E24] border border-[#F58F7C] rounded-lg focus:outline-none"
                 type="text"
                 id="photoUrl"
                 value={photoUrl}
                 onChange={(e) => setPhotoUrl(e.target.value)}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
               />
               {photoUrl && (
                 <div className="mt-4 flex justify-center">
@@ -203,43 +166,46 @@ const EditProfile: React.FC = () => {
             </div>
 
             <div className="col-span-2">
-              <label
-                className="block text-[#F2C4CE] font-semibold mb-2"
-                htmlFor="about"
-              >
+              <label className="block text-[#F2C4CE] font-semibold mb-2" htmlFor="about">
                 About
               </label>
-              <textarea
+              <motion.textarea
                 className="w-full px-3 py-2 text-[#1F1E24] border border-[#F58F7C] rounded-lg focus:outline-none"
                 id="about"
                 value={about}
                 onChange={(e) => setAbout(e.target.value)}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
               />
             </div>
 
             <div className="col-span-2">
-              <label
-                className="block text-[#F2C4CE] font-semibold mb-2"
-                htmlFor="skills"
-              >
+              <label className="block text-[#F2C4CE] font-semibold mb-2" htmlFor="skills">
                 Skills
               </label>
               <div className="flex items-center">
-                <input
+                <motion.input
                   className="flex-1 px-3 py-2 text-[#1F1E24] border border-[#F58F7C] rounded-lg focus:outline-none"
                   type="text"
                   id="skills"
                   value={newSkill}
                   onChange={(e) => setNewSkill(e.target.value)}
                   placeholder="Add a skill"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
                 />
-                <button
+                <motion.button
                   type="button"
                   className="ml-3 px-4 py-2 bg-[#F58F7C] text-white rounded-lg"
                   onClick={handleSkillAdd}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
                 >
                   Add
-                </button>
+                </motion.button>
               </div>
               <div className="mt-3">
                 {skills.map((skill) => (
@@ -261,19 +227,27 @@ const EditProfile: React.FC = () => {
             </div>
 
             <div className="col-span-2 flex items-center justify-between mt-4">
-              <button
+              <motion.button
                 className="px-6 py-2 bg-gradient-to-r from-[#F58F7C] to-[#E06E64] text-white font-semibold rounded-lg"
                 type="submit"
+                initial={{ scale: 1 }}
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 300 }}
               >
                 Update Profile
-              </button>
+              </motion.button>
 
               <ChangePasswordPopUp />
             </div>
           </form>
-        </div>
+        </motion.div>
         {/* Right Column: Profile Card */}
-        <div className="w-full md:w-1/2 flex  justify-center">
+        <motion.div
+          className="w-full md:w-1/2 flex justify-center"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
           <ProfileCard
             _id={user._id}
             userName={userName}
@@ -282,7 +256,7 @@ const EditProfile: React.FC = () => {
             age={age}
             gender={gender}
           />
-        </div>
+        </motion.div>
       </div>
     </div>
   );

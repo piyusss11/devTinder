@@ -19,6 +19,7 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import ViewProfilePopUp from "@/components/ViewProfilePopUp";
 import PaginationForFeed from "@/components/PaginationForFeed";
 import { FiltersDialog } from "@/components/FiltersDialog";
+import { motion } from "framer-motion";
 
 const Feed: React.FC = () => {
   const dispatch = useDispatch();
@@ -33,9 +34,14 @@ const Feed: React.FC = () => {
   const [skills, setSkills] = useState<string>("");
   const [minAge, setMinAge] = useState<null | number>(null);
   const [maxAge, setMaxAge] = useState<null | number>(null);
+  const [animatedId, setAnimatedId] = useState<string | null>(null);
+  const [animationDirection, setAnimationDirection] = useState<
+    "left" | "right" | null
+  >(null);
 
   const handleNextPage = () => setPage((prev) => prev + 1);
-  const handlePreviousPage = () => setPage((prev) => Math.max(prev - 1, 1)); // so pages dont go below 1
+  const handlePreviousPage = () => setPage((prev) => Math.max(prev - 1, 1));
+
   const handleFilters = (
     gender: string,
     skills: string,
@@ -46,13 +52,9 @@ const Feed: React.FC = () => {
     setSkills(skills);
     setMinAge(minAge);
     setMaxAge(maxAge);
-    // console.log("gender:", gender);
-    // console.log("skills:", skills);
-    // console.log("minAge:", minAge);
-    // console.log("maxAge:", maxAge);
   };
+
   const getFeed = async () => {
-    // if (feed.length > 0 && !refreshFeed) return;
     try {
       const feedResponse = await axios.get(
         `${Local_Url}/user/feed?page=${page}&limit=${limit}&gender=${gender}&skills=${skills}&minAge=${minAge}&maxAge=${maxAge}`,
@@ -74,13 +76,23 @@ const Feed: React.FC = () => {
         {},
         { withCredentials: true }
       );
+
       if (statusOfReq === "interested") {
         toast({ description: "Request sent successfully" });
-      }
-      if (statusOfReq === "uninterested") {
+        setAnimationDirection("right");
+      } else if (statusOfReq === "uninterested") {
         toast({ description: "User Rejected successfully" });
+        setAnimationDirection("left");
       }
+
+      setAnimatedId(id);
       setRefreshFeed(true);
+
+      // Reset animation state after 0.5s (animation duration)
+      setTimeout(() => {
+        setAnimatedId(null);
+        setAnimationDirection(null);
+      }, 5000);
     } catch (error) {
       toast({
         description: "Can't send request",
@@ -97,7 +109,6 @@ const Feed: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#2C2B30] text-[#D6D6D6]">
-      {/* Navbar */}
       <MainNavBar />
       {feed.length === 0 ? (
         <div className="p-8">
@@ -105,14 +116,30 @@ const Feed: React.FC = () => {
         </div>
       ) : (
         <div>
-          {/* for filters */}
           <FiltersDialog onFilters={handleFilters} />
           <div className="p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {feed.map((profile) => (
               <Dialog key={profile._id}>
                 <DialogTrigger>
-                  <div
-                    className="relative group rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 ease-in-out h-[300px] w-full" // Fixed height for uniformity
+                  <motion.div
+                    className={`relative group rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 ease-in-out h-[300px] w-full`}
+                    initial={{ opacity: 1 }}
+                    animate={{
+                      x:
+                        animatedId === profile._id
+                          ? animationDirection === "right"
+                            ? 100
+                            : -100
+                          : 0,
+                      opacity: animatedId === profile._id ? 0 : 1,
+                      backgroundColor:
+                        animatedId === profile._id
+                          ? animationDirection === "right"
+                            ? "rgba(76, 175, 80, 0.5)"
+                            : "rgba(244, 67, 54, 0.5)"
+                          : "transparent",
+                    }}
+                    transition={{ duration: 0.5 }}
                   >
                     <div className="h-full w-full flex items-center justify-center">
                       <img
@@ -154,18 +181,24 @@ const Feed: React.FC = () => {
                     <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
                       <div className="flex space-x-6">
                         <FontAwesomeIcon
-                          onClick={() => handleReq("interested", profile._id)}
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevent the dialog from opening
+                            handleReq("interested", profile._id);
+                          }}
                           icon={faCheck}
                           className="text-4xl text-[#F58F7C] hover:scale-110 transition-transform duration-200 ease-in-out cursor-pointer"
                         />
                         <FontAwesomeIcon
-                          onClick={() => handleReq("uninterested", profile._id)}
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevent the dialog from opening
+                            handleReq("uninterested", profile._id);
+                          }}
                           icon={faTimes}
                           className="text-4xl text-[#F2C4CE] hover:scale-110 transition-transform duration-200 ease-in-out cursor-pointer"
                         />
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                   <ViewProfilePopUp
                     info={profile}
                     onInterested={() => handleReq("interested", profile._id)}

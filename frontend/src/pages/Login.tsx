@@ -8,8 +8,8 @@ import { useToast } from "@/hooks/use-toast";
 import BackGroundImage from "../assets/BgImg.jpg";
 
 const Login: React.FC = () => {
-  const [emailId, setEmailId] = useState("yash@gmail.com");
-  const [password, setPassword] = useState("Yash@123");
+  const [emailId, setEmailId] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { toast } = useToast();
