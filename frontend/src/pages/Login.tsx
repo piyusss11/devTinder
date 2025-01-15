@@ -30,6 +30,7 @@ const Login: React.FC = () => {
       toast({ title: "Login successful", description: response.data.message });
       navigate("/");
     } catch (error) {
+      console.log(error)
       toast({ title: "Login failed", description: "Invalid credentials",variant: "destructive" });
       // console.error("Login failed:", error); // Show error to the user
     }

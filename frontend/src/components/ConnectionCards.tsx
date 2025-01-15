@@ -4,7 +4,7 @@ import { ProfileCardProps } from "./ProfileCard";
 import { faGenderless, faMars, faVenus } from "@fortawesome/free-solid-svg-icons";
 
 const ConnectionCards = ({
-  _id,
+
   userName,
   firstName,
   photoUrl,

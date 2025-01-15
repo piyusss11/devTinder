@@ -11,7 +11,7 @@ const connectionsSlice = createSlice({
     addConnection: (state, action: PayloadAction<Iuser>) => {
       state.push(action.payload);
     },
-    setConnections: (state, action: PayloadAction<Iuser[]>) => {
+    setConnections: (_state, action: PayloadAction<Iuser[]>) => {
       return action.payload; // Replace entire connections with new array
     },
     removeConnection: (state, action: PayloadAction<string>) => {

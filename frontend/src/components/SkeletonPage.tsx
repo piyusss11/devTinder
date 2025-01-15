@@ -10,7 +10,7 @@ const SkeletonPage = () => {
         No Users found
       </h1>
       <div className="flex gap-4 flex-wrap">
-        {arr.map((data, index) => (
+        {arr.map((_data, index) => (
           <SkeletonCard key={index} />
         ))}
       </div>

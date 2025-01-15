@@ -34,7 +34,7 @@ const userSlice = createSlice({
   name: "user",
   initialState, 
   reducers: {
-    addUser: (state, action: PayloadAction<Iuser>) => {
+    addUser: (_state, action: PayloadAction<Iuser>) => {
       // Replace the state with the user data from action.payload
       return { ...action.payload };
     },

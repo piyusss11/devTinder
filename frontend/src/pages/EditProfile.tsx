@@ -100,7 +100,7 @@ const EditProfile: React.FC = () => {
               { label: "First Name", value: firstName, setValue: setFirstName, type: "text", id: "firstName" },
               { label: "Last Name", value: lastName, setValue: setLastName, type: "text", id: "lastName" },
               { label: "User Name", value: userName, setValue: setUserName, type: "text", id: "userName", required: true },
-              { label: "Age", value: age || "", setValue: setAge, type: "number", id: "age" },
+              { label: "Age", value: age || "", setValue: (value:string) => setAge(value ? Number(value) : undefined), type: "number", id: "age" },
             ].map(({ label, value, setValue, type, id, required }) => (
               <div key={id}>
                 <label className="block text-[#F2C4CE] font-semibold mb-2" htmlFor={id}>
@@ -111,7 +111,7 @@ const EditProfile: React.FC = () => {
                   type={type}
                   id={id}
                   value={value}
-                  onChange={(e) => setValue(type === 'number' ? Number(e.target.value) : e.target.value)}
+                  onChange={(e) =>setValue(type === 'number' ? e.target.value : e.target.value)}
                   required={required}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
